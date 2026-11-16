@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fortune Commodities FZCO</title>
+  <meta name="description" content="Fortune Commodities FZCO is a Dubai-based, DMCC-licensed trading company specialising in arbitrage, FX, gold and commodities.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500&family=IBM+Plex+Sans:wght@700&display=swap">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/themes.css?v=2">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Fortune Commodities FZCO, home">
+      <img src="assets/logo-cream.png" alt="Fortune Commodities FZCO" width="640" height="232">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu<span aria-hidden="true"></span></button>
+    <nav class="nav" id="main-nav" aria-label="Main">
+      <a href="who-we-are.html">Who we are</a>
+      <a href="what-we-do.html">What we do</a>
+      <a href="technology.html">Technology</a>
+      <a href="leadership.html">Leadership</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. Hero: quiet headline over a soft glow, the solid half-globe rising beneath it -->
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true">
+        <span class="g g-amber"></span><span class="g g-ember"></span><span class="g g-steel"></span>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">DMCC licensed · Dubai · Est. 2015</p>
+        <h1 class="hero-title">Global markets. Proven expertise. <span class="hl">Trusted execution.</span></h1>
+        <p class="hero-lead">Fortune Commodities FZCO is a Dubai-based, DMCC-licensed trading company specialising in arbitrage, FX, gold and commodities, with over 20 years of market experience.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#about">Explore the firm</a>
+          <a class="btn btn-secondary" href="#contact">Contact us <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="dome-wrap" aria-hidden="true">
+        <canvas id="dome" class="dome"></canvas>
+      </div>
+    </section>
+
+    <!-- 2. The space between: the statement sits in the gap between the two halves -->
+    <section class="between" id="about">
+      <div class="between-glow" aria-hidden="true">
+        <span class="b b-amber"></span><span class="b b-oxblood"></span><span class="b b-steel"></span><span class="b b-ember"></span>
+      </div>
+
+      <div class="between-copy">
+        <p class="statement">Established in 2015 under DMCC, Fortune Commodities FZCO operates at the intersection of financial expertise, technology and disciplined risk management.</p>
+        <p class="statement-sub">We identify global arbitrage opportunities across foreign exchange, commodities and precious metals markets.</p>
+
+        <ul class="pillars">
+          <li><span class="pillar-k">FX &amp; commodity</span><span class="pillar-v">Trading</span></li>
+          <li><span class="pillar-k">Gold trading</span><span class="pillar-v">Operations</span></li>
+          <li><span class="pillar-k">DMCC licensed</span><span class="pillar-v">Entity</span></li>
+          <li><span class="pillar-k">Strong compliance</span><span class="pillar-v">Framework</span></li>
+          <li><span class="pillar-k">Algorithmic &amp; HFT</span><span class="pillar-v">Systems</span></li>
+        </ul>
+      </div>
+
+      <!-- 3. The other half: the same globe as a wireframe, the structure under the surface -->
+      <div class="bowl-wrap" aria-hidden="true">
+        <canvas id="bowl" class="bowl"></canvas>
+      </div>
+    </section>
+
+    <!-- 4. Contact: converging lines behind, a two-mode enquiry panel on the right -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <canvas class="contact-lines" id="contact-lines" aria-hidden="true"></canvas>
+      <div class="contact-glow" aria-hidden="true"></div>
+
+      <div class="contact-inner">
+        <div class="contact-intro">
+          <p class="eyebrow">Contact</p>
+          <h2 class="contact-title" id="contact-title">Let's find where <span class="hl">we meet.</span></h2>
+          <p class="contact-lead">Whether you are a counterparty, a partner or someone who wants to build with us, tell us a little about it and the right person on our team will reply directly.</p>
+
+          <dl class="contact-details">
+            <div>
+              <dt>Registered office</dt>
+              <dd>Jumeirah Lake Towers, Dubai<br>United Arab Emirates</dd>
+            </div>
+            <div>
+              <dt>Licensed by</dt>
+              <dd>Dubai Multi Commodities Centre (DMCC)</dd>
+            </div>
+            <div>
+              <dt>Part of</dt>
+              <dd>Marwadi Chandarana Group</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="panel">
+          <div class="tabs" role="tablist" aria-label="Type of enquiry">
+            <button class="tab" role="tab" id="tab-business" aria-controls="form-business" aria-selected="true">Business enquiries</button>
+            <button class="tab" role="tab" id="tab-careers" aria-controls="form-careers" aria-selected="false" tabindex="-1">Careers</button>
+            <span class="tab-ink" aria-hidden="true"></span>
+          </div>
+
+          <!-- Business -->
+          <form class="enquiry" id="form-business" role="tabpanel" aria-labelledby="tab-business" novalidate>
+            <fieldset class="chips">
+              <legend>I'm enquiring about</legend>
+              <label class="chip"><input type="radio" name="topic" value="Counterparty relationship" checked><span>Counterparty relationship</span></label>
+              <label class="chip"><input type="radio" name="topic" value="FX and commodities"><span>FX &amp; commodities</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Gold and precious metals"><span>Gold &amp; precious metals</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Partnership"><span>Partnership</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Compliance"><span>Compliance</span></label>
+              <label class="chip"><input type="radio" name="topic" value="Other"><span>Other</span></label>
+            </fieldset>
+
+            <div class="fields">
+              <div class="field"><input id="b-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="b-name">Your name</label><span class="err">Please add your name.</span></div>
+              <div class="field"><input id="b-company" name="company" type="text" autocomplete="organization" placeholder=" " required><label for="b-company">Company</label><span class="err">Please add your company.</span></div>
+              <div class="field"><input id="b-email" name="email" type="email" autocomplete="email" placeholder=" " required><label for="b-email">Work email</label><span class="err">Please add a valid email address.</span></div>
+              <div class="field"><input id="b-phone" name="phone" type="tel" autocomplete="tel" placeholder=" "><label for="b-phone">Phone <em>(optional)</em></label></div>
+              <div class="field field-wide"><textarea id="b-message" name="message" rows="3" placeholder=" " required></textarea><label for="b-message">How can we help?</label><span class="err">Please add a short message.</span></div>
+            </div>
+
+            <div class="form-foot">
+              <p class="fine">We use these details only to reply to you.</p>
+              <button class="btn btn-primary btn-submit" type="submit">Send enquiry <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </form>
+
+          <!-- Careers -->
+          <form class="enquiry" id="form-careers" role="tabpanel" aria-labelledby="tab-careers" novalidate hidden>
+            <fieldset class="chips">
+              <legend>I'm interested in</legend>
+              <label class="chip"><input type="radio" name="area" value="Trading" checked><span>Trading</span></label>
+              <label class="chip"><input type="radio" name="area" value="Quantitative research"><span>Quantitative research</span></label>
+              <label class="chip"><input type="radio" name="area" value="Technology"><span>Technology</span></label>
+              <label class="chip"><input type="radio" name="area" value="Risk and compliance"><span>Risk &amp; compliance</span></label>
+              <label class="chip"><input type="radio" name="area" value="Operations"><span>Operations</span></label>
+            </fieldset>
+
+            <div class="fields">
+              <div class="field"><input id="c-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="c-name">Your name</label><span class="err">Please add your name.</span></div>
+              <div class="field"><input id="c-email" name="email" type="email" autocomplete="email" placeholder=" " required><label for="c-email">Email</label><span class="err">Please add a valid email address.</span></div>
+              <div class="field field-wide"><input id="c-link" name="link" type="url" placeholder=" "><label for="c-link">LinkedIn or portfolio <em>(optional)</em></label></div>
+              <div class="field field-wide file-field">
+                <input id="c-cv" name="cv" type="file" accept=".pdf,.doc,.docx" required>
+                <label for="c-cv"><span class="file-btn">Attach CV</span><span class="file-name">PDF or Word, up to 5 MB</span></label>
+                <span class="err">Please attach your CV.</span>
+              </div>
+              <div class="field field-wide"><textarea id="c-message" name="message" rows="3" placeholder=" "></textarea><label for="c-message">Anything you'd like us to know <em>(optional)</em></label></div>
+            </div>
+
+            <div class="form-foot">
+              <p class="fine">We keep applications on file for 12 months.</p>
+              <button class="btn btn-primary btn-submit" type="submit">Send application <span class="arrow" aria-hidden="true">→</span></button>
+            </div>
+          </form>
+
+          <div class="sent" id="sent" hidden tabindex="-1">
+            <span class="sent-mark" aria-hidden="true"></span>
+            <h3>Thank you. We have your message.</h3>
+            <p id="sent-text">The right person on our team will reply to you directly.</p>
+            <button class="btn btn-secondary" type="button" id="sent-again">Send another</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer: the spread closes wherever the visitor points -->
+  <footer class="site-footer" aria-label="Footer">
+    <div class="spread" id="spread">
+      <canvas class="spread-lines" id="spread-lines" aria-hidden="true"></canvas>
+      <div class="spread-copy">
+        <p class="spread-hint" aria-hidden="true"><span class="hint-dot"></span><span class="hint-long">Move across the lines to close the spread</span><span class="hint-short">Tap the lines to close the spread</span></p>
+      </div>
+    </div>
+
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-cream.png" alt="Fortune Commodities FZCO" width="640" height="232">
+        <p>Cross-venue arbitrage across foreign exchange, gold, precious metals and commodities. Licensed under DMCC since 2015.</p>
+        <address>
+          <span class="foot-k">Registered office</span>
+          Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates
+        </address>
+      </div>
+
+      <nav class="foot-nav" aria-label="Footer">
+        <span class="foot-k">Navigate</span>
+        <ul>
+          <li><a href="index.html"><i>01</i><span>Home</span></a></li>
+          <li><a href="who-we-are.html"><i>02</i><span>Who we are</span></a></li>
+          <li><a href="what-we-do.html"><i>03</i><span>What we do</span></a></li>
+          <li><a href="technology.html"><i>04</i><span>Technology</span></a></li>
+          <li><a href="leadership.html"><i>05</i><span>Leadership</span></a></li>
+          <li><a href="#contact"><i>06</i><span>Contact us</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="foot-touch">
+        <span class="foot-k">Get in touch</span>
+        <ul class="mail-list">
+          <li>
+            <span class="mail-k">General</span>
+            <a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a>
+            <button class="copy" type="button" data-copy="info@fortunecommodities.com" aria-label="Copy general email address">Copy</button>
+          </li>
+          <li>
+            <span class="mail-k">Careers</span>
+            <a href="mailto:careers@fortunecommodities.com">careers@fortunecommodities.com</a>
+            <button class="copy" type="button" data-copy="careers@fortunecommodities.com" aria-label="Copy careers email address">Copy</button>
+          </li>
+          <li>
+            <span class="mail-k">Phone</span>
+            <a href="tel:+91712345678934">+917 12345678934</a>
+          </li>
+        </ul>
+
+        <div class="foot-row">
+          <div class="social">
+            <a href="#" aria-label="Fortune Commodities on LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.06c.53-1 1.83-1.8 3.77-1.8 4 0 4.37 2.4 4.37 5.5v5.8h-4v-5.1c0-1.3 0-2.9-1.8-2.9s-2.2 1.4-2.2 2.8v5.2h-4z"/></svg>
+            </a>
+            <a href="#" aria-label="Fortune Commodities on X">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.5 4.7H5.7z"/></svg>
+            </a>
+          </div>
+          <div class="clock" aria-label="Local time in Dubai">
+            <span class="clock-dot" aria-hidden="true"></span>
+            <span>Dubai <b id="dubai-time">--:--</b> GST</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wordmark" id="wordmark" aria-hidden="true">FORTUNE</div>
+
+    <div class="foot-bar">
+      <p>© 2026 Fortune Commodities FZCO. All rights reserved.</p>
+      <ul class="legal">
+        <li><a href="#">Terms &amp; Conditions</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Legal Disclaimer</a></li>
+      </ul>
+      <a class="to-top" href="#" aria-label="Back to top"><span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
+
+  <script src="js/land-mask.js"></script>
+  <script src="js/globe.js"></script>
+  <script src="js/contact.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+</html>

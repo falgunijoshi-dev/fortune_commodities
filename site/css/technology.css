@@ -1,0 +1,76 @@
+/* Technology: a holographic wireframe city drawn on canvas. The seven modules are small
+   tags pinned to buildings at different heights. Calm: slow camera drift, small type. Warm palette. */
+
+.nav a[aria-current="page"] { color: var(--neutral-800); background: var(--neutral-200); }
+
+/* line colours for the city */
+:root { --city-edge: var(--viz-line-hi); --city-face: var(--viz-line); }
+
+/* ---------- the city ---------- */
+.city {
+  position: relative; isolation: isolate; overflow: hidden;
+  height: max(100vh, 680px);
+  background:
+    radial-gradient(120% 60% at 50% 62%, color-mix(in srgb, var(--glow-amber) 16%, transparent), transparent 70%),
+    var(--black);
+}
+.city::after { /* fade the city into the page below */
+  content: ""; position: absolute; inset: auto 0 0; height: 22%; z-index: 2; pointer-events: none;
+  background: linear-gradient(transparent, var(--black));
+}
+.city-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.city-head {
+  position: absolute; z-index: 3; left: 0; right: 0; top: clamp(120px, 16vh, 160px);
+  max-width: 1240px; margin: 0 auto; padding: 0 var(--space-12);
+  pointer-events: none; text-align: center;
+}
+.tech-title {
+  margin: 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(34px, 3.4vw, 48px); line-height: 1.05; letter-spacing: -.02em;
+  color: var(--neutral-800);
+}
+.js .tech-title { opacity: 0; transform: translateY(12px); animation: t-rise 1s var(--ease-out) .2s forwards; }
+@keyframes t-rise { to { opacity: 1; transform: none; } }
+
+/* tags pinned to buildings; JS positions each one every frame */
+.city-tags { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.tag {
+  position: absolute; left: 0; top: 0; pointer-events: auto;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 12px 8px 10px; white-space: nowrap;
+  font-family: var(--font-body); font-weight: 500; font-size: 14px; line-height: 1; color: var(--neutral-800);
+  background: color-mix(in srgb, var(--neutral-100) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--viz-line-hi) 26%, transparent);
+  border-radius: var(--radius-xs);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .8s var(--ease-out), border-color .25s, background-color .25s, color .25s;
+  cursor: default; will-change: transform;
+}
+.tag.shown { opacity: 1; }
+.tag i { font-style: normal; font-family: var(--font-condensed); font-size: 11px; letter-spacing: .12em; color: var(--bronze-300); }
+.tag:hover, .tag.active {
+  border-color: color-mix(in srgb, var(--bronze-300) 75%, transparent);
+  background: color-mix(in srgb, var(--bronze-950) 82%, transparent);
+  color: var(--bronze-50);
+}
+
+/* ---------- the list (screen readers on desktop; visible on phones) ---------- */
+.mod-list { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--neutral-300); }
+.row { display: flex; align-items: baseline; gap: var(--space-6); padding: 20px 0; border-bottom: 1px solid var(--neutral-300); }
+.row-n { flex: none; width: 28px; font-family: var(--font-condensed); font-size: 13px; letter-spacing: .12em; color: var(--bronze-300); }
+.row-name { font-family: var(--font-body); font-weight: 500; font-size: 18px; line-height: 1.4; color: var(--neutral-700); }
+
+@media (max-width: 900px) {
+  .city { height: 64vh; min-height: 460px; }
+  .city-head { top: 112px; padding: 0 var(--space-6); }
+  .city-tags { display: none; }
+  .mod-list {
+    position: relative; z-index: 3; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal;
+    padding: 0 var(--space-6) var(--space-24); margin-top: calc(-1 * var(--space-8));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .tech-title { opacity: 1; transform: none; animation: none; }
+}

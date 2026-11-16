@@ -1,0 +1,15 @@
+/* Semantic tokens on top of tokens.css. The site uses the original warm palette
+   (black, bronze, cream) on every page. */
+
+:root { /* semantic tokens */
+  --hl-1: var(--bronze-100);
+  --hl-2: var(--glow-champagne);
+  --hl-3: var(--bronze-300);
+  --globe-body-1: #2a1f17;
+  --globe-body-2: #110d0a;
+  --globe-body-3: #050403;
+  /* data-viz colours for globes and line patterns */
+  --viz-dot-lo: var(--bronze-600);  --viz-dot-hi: #ead2ae;
+  --viz-line: var(--bronze);        --viz-line-dim: var(--bronze-600); --viz-line-hi: var(--bronze-200);
+  --viz-warm: #d69a55;              --viz-warm-hi: #ead2ae;
+}
