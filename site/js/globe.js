@@ -1,8 +1,8 @@
 /* Two halves of one globe.
    Dome (hero): the solid upper half. Land as warm dots, trading hubs that pulse,
    and price arcs that travel from each hub and converge on Dubai.
-   Bowl (below the statement): the lower half as a wireframe, with the three
-   markets the firm trades converging on the arbitrage desk at the pole. */
+   Bowl (joined beneath it): the lower half as a wireframe; the five pillars
+   sit on it in HTML. */
 (function () {
   'use strict';
 
@@ -24,7 +24,6 @@
     line: rgb(tok('viz-line')), lineDim: rgb(tok('viz-line-dim')), lineHi: rgb(tok('viz-line-hi')),
     warm: rgb(tok('viz-warm')), warmHi: rgb(tok('viz-warm-hi'))
   };
-  var FONT_COND = tok('font-condensed') || 'sans-serif';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var D2R = Math.PI / 180;
 
@@ -77,9 +76,10 @@
   }
 
   /* ---------- canvas helper ---------- */
+  var T0 = performance.now();   // one clock for both halves, so they turn as one globe
   function setup(canvas, draw) {
     var ctx = canvas.getContext('2d');
-    var state = { w: 0, h: 0, dpr: 1, visible: true, t0: performance.now() };
+    var state = { w: 0, h: 0, dpr: 1, visible: true, t0: T0 };
     function resize() {
       var r = canvas.getBoundingClientRect();
       state.dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -122,51 +122,132 @@
     return { pts: pts, speed: 0.10 + (i % 3) * 0.025, offset: i * 0.37 };
   });
 
-  function drawDome(ctx, s, time) {
-    var W = s.w, H = s.h; ctx.clearRect(0, 0, W, H);
-    if (W < 20 || H < 20) return;
-    var R = W * 0.43, cx = W / 2, cy = H / 2;
-    // Turn the globe so Dubai faces the viewer, then sway gently either side.
-    var rot = -55.3 * D2R + Math.sin(time * 0.05) * 0.55;
-    var tilt = 0.18; // a little of the northern hemisphere tipped toward us
+  /* ---------- one globe, drawn in two canvases ----------
+     Both canvases are the same size with the sphere's centre on the seam between them,
+     so everything below is drawn identically in each and the halves line up exactly. */
+  var TILT = 0.18; // a little of the northern hemisphere tipped toward us
+  function globeRot(time) { return -55.3 * D2R + Math.sin(time * 0.05) * 0.55; }   // Dubai faces the viewer, swaying gently
+  function smooth(a, b, v) { var x = Math.max(0, Math.min(1, (v - a) / (b - a))); return x * x * (3 - 2 * x); }
 
-    // atmosphere halo
-    var halo = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.22);
-    halo.addColorStop(0, rgba(C.amber, 0));
-    halo.addColorStop(0.28, rgba(C.champagne, 0.30));
-    halo.addColorStop(0.36, rgba(C.amber, 0.16));
+  function sphereBase(ctx, cx, cy, R) {
+    // atmosphere: a soft glow that fades out from the edge
+    var halo = ctx.createRadialGradient(cx, cy, R * 0.98, cx, cy, R * 1.16);
+    halo.addColorStop(0, rgba(C.amber, 0.20));
+    halo.addColorStop(0.2, rgba(C.amber, 0.12));
+    halo.addColorStop(0.5, rgba(C.ember, 0.05));
+    halo.addColorStop(0.8, rgba(C.ember, 0.015));
     halo.addColorStop(1, rgba(C.ember, 0));
-    ctx.fillStyle = halo; ctx.fillRect(0, 0, W, H);
-
+    ctx.fillStyle = halo; ctx.fillRect(cx - R * 1.2, cy - R * 1.2, R * 2.4, R * 2.4);
     // body
     var body = ctx.createRadialGradient(cx - R * 0.25, cy - R * 0.55, R * 0.1, cx, cy, R);
     body.addColorStop(0, tok('globe-body-1'));
     body.addColorStop(0.55, tok('globe-body-2'));
     body.addColorStop(1, tok('globe-body-3'));
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = body; ctx.fill();
+    // inner atmosphere: the edge brightens softly from inside
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+    var inner = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R);
+    inner.addColorStop(0, rgba(C.amber, 0));
+    inner.addColorStop(0.75, rgba(C.amber, 0.04));
+    inner.addColorStop(1, rgba(C.champagne, 0.16));
+    ctx.fillStyle = inner; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    ctx.restore();
+  }
 
-    // limb light
-    var limb = ctx.createLinearGradient(0, cy - R, 0, cy);
-    limb.addColorStop(0, rgba(C.champagne, 0.85));
-    limb.addColorStop(0.5, rgba(C.amber, 0.35));
-    limb.addColorStop(1, rgba(C.amber, 0));
-    ctx.beginPath(); ctx.arc(cx, cy, R - 0.5, Math.PI, Math.PI * 2);
-    ctx.lineWidth = 1.5; ctx.strokeStyle = limb; ctx.stroke();
+  // Latitude and longitude lines on the front of the sphere. `fade(y)` sets how strong
+  // they are at a height on screen (-1 top, 0 the seam, 1 bottom).
+  function graticule(ctx, cx, cy, R, rot, fade, time) {
+    function run(pts, a0, w) {
+      for (var k = 1; k < pts.length; k++) {
+        var a = pts[k - 1], b = pts[k];
+        if (a.z <= 0 || b.z <= 0) continue;
+        var f = fade((a.y + b.y) / 2); if (f <= 0.01) continue;
+        ctx.beginPath(); ctx.moveTo(cx + a.x * R, cy + a.y * R); ctx.lineTo(cx + b.x * R, cy + b.y * R);
+        ctx.strokeStyle = rgba(C.line, a0 * f * (0.3 + 0.7 * (a.z + b.z) / 2)); ctx.lineWidth = w; ctx.stroke();
+      }
+    }
+    var lines = [];
+    for (var lat = -75; lat <= 75; lat += 15) {
+      var pts = [];
+      for (var lon = 0; lon <= 360; lon += 3) pts.push(project(lat, lon, rot, TILT));
+      run(pts, lat === 0 ? 0.34 : 0.22, lat === 0 ? 1.1 : 0.9);   // kept light, so the globe stays calm
+      lines.push({ pts: pts, ring: true });
+    }
+    for (var m = 0; m < 360; m += 15) {
+      var mp = [];
+      for (var la = 90; la >= -90; la -= 3) mp.push(project(la, m, rot, TILT));   // top to bottom
+      run(mp, 0.2, 0.9);
+      lines.push({ pts: mp, ring: false });
+    }
+    if (!reduced) glint(ctx, cx, cy, R, lines, fade, time);
+  }
 
-    // land dots
+  // A soft light that travels along one line at a time, then moves on to another.
+  var GLINT_PERIOD = 3.4;
+  function glint(ctx, cx, cy, R, lines, fade, time) {
+    var n = Math.floor(time / GLINT_PERIOD), p = (time % GLINT_PERIOD) / GLINT_PERIOD;
+    lines = lines.filter(function (l) {                      // skip lines that are faded out at the top
+      for (var i = 0; i < l.pts.length; i++) if (l.pts[i].z > 0 && fade(l.pts[i].y) > 0.5) return true;
+      return false;
+    });
+    if (!lines.length) return;
+    var line = lines[(n * 13 + 5) % lines.length];
+    // only the part of the line on the front of the globe, in order
+    var src = line.pts, front = [];
+    if (line.ring) {
+      var start = -1;
+      for (var i = 0; i < src.length - 1; i++) if (src[i].z <= 0 && src[i + 1].z > 0) { start = i + 1; break; }
+      if (start < 0) start = 0;
+      for (var k = 0; k < src.length - 1; k++) { var q = src[(start + k) % (src.length - 1)]; if (q.z > 0) front.push(q); else if (front.length) break; }
+    } else {
+      for (var j = 0; j < src.length; j++) if (src[j].z > 0) front.push(src[j]);
+    }
+    if (front.length < 4) return;
+    var env = Math.sin(Math.PI * p);                       // eases in and out along the way
+    var len = front.length - 1, tail = len * 0.22;
+    var head = p * (len + tail);
+    ctx.save(); ctx.lineCap = 'round';
+    ctx.shadowColor = rgba(C.amber, 0.9); ctx.shadowBlur = 10;
+    for (var t = 1; t <= len; t++) {
+      var d = head - t; if (d < 0 || d > tail) continue;
+      var a = front[t - 1], b = front[t];
+      var f = fade((a.y + b.y) / 2); if (f <= 0.01) continue;
+      var k2 = 1 - d / tail;
+      ctx.beginPath(); ctx.moveTo(cx + a.x * R, cy + a.y * R); ctx.lineTo(cx + b.x * R, cy + b.y * R);
+      ctx.strokeStyle = rgba(C.warmHi, 0.85 * k2 * k2 * f * env); ctx.lineWidth = 1.6; ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Land as warm dots. `fade(y)` as above.
+  function landDots(ctx, s, cx, cy, R, rot, time, fade) {
     var pts = s.land || (s.land = landPoints(1.25));
-    var base = Math.max(0.9, W / 900);
+    var base = Math.max(0.9, s.w / 900);
     for (var i = 0; i < pts.length; i++) {
-      var p = pts[i], q = project(p[0], p[1], rot, tilt);
+      var p = pts[i], q = project(p[0], p[1], rot, TILT);
       if (q.z <= 0.02) continue;
+      var f = fade(q.y); if (f <= 0.01) continue;
       var light = Math.max(0, -q.y * 0.55 + q.z * 0.6 - q.x * 0.15); // lit from the top
       var tw = reduced ? 0.5 : 0.5 + 0.5 * Math.sin(time * 1.3 + p[2] * 40);
-      var a = Math.min(1, 0.12 + light * 0.75 + tw * 0.08);
-      var col = mix(C.dotLo, C.dotHi, Math.min(1, light * 0.9));
-      ctx.fillStyle = rgba(col, a);
+      var a = Math.min(1, 0.12 + light * 0.75 + tw * 0.08) * f;
+      ctx.fillStyle = rgba(mix(C.dotLo, C.dotHi, Math.min(1, light * 0.9)), a);
       var r = base * (0.55 + q.z * 0.6);
       ctx.fillRect(cx + q.x * R - r, cy + q.y * R - r, r * 2, r * 2);
     }
+  }
+
+  // the top half shows the land; toward the seam it gives way to line art
+  function domeLines(y) { return smooth(-0.55, 0.05, y); }
+  function domeDots(y)  { return 1 - 0.85 * smooth(-0.15, 0.35, y); }
+
+  function drawDome(ctx, s, time) {
+    var W = s.w, H = s.h; ctx.clearRect(0, 0, W, H);
+    if (W < 20 || H < 20) return;
+    var R = W * 0.43, cx = W / 2, cy = H / 2;
+    var rot = globeRot(time), tilt = TILT;
+    sphereBase(ctx, cx, cy, R);
+    graticule(ctx, cx, cy, R, rot, domeLines, time);
+    landDots(ctx, s, cx, cy, R, rot, time, domeDots);
 
     // price arcs converging on Dubai
     ctx.lineCap = 'round';
@@ -211,97 +292,14 @@
   }
 
   /* ================= BOWL ================= */
-  var MARKETS = [
-    { label: 'Foreign exchange', lat: -18, lon: -42 },
-    { label: 'Precious metals', lat: -14, lon: 0 },
-    { label: 'Commodities', lat: -18, lon: 42 }
-  ];
-
   function drawBowl(ctx, s, time) {
     var W = s.w, H = s.h; ctx.clearRect(0, 0, W, H);
     if (W < 20 || H < 20) return;
-    var R = W * 0.44, cx = W / 2, cy = H / 2;
-    var rot = reduced ? 0 : time * 0.035;
-    var tilt = -0.42; // seen from above: the equator becomes an ellipse
-
-    function line(pts, front, back, width) {
-      for (var k = 1; k < pts.length; k++) {
-        var a = pts[k - 1], b = pts[k];
-        var z = (a.z + b.z) / 2;
-        ctx.beginPath(); ctx.moveTo(cx + a.x * R, cy + a.y * R); ctx.lineTo(cx + b.x * R, cy + b.y * R);
-        ctx.strokeStyle = z > 0 ? rgba(front[0], front[1] * (0.35 + 0.65 * z)) : rgba(back[0], back[1]);
-        ctx.lineWidth = width; ctx.stroke();
-      }
-    }
-
-    // inner glow of the bowl
-    var g = ctx.createRadialGradient(cx, cy + R * 0.35, 0, cx, cy + R * 0.2, R);
-    g.addColorStop(0, rgba(C.ember, 0.16)); g.addColorStop(0.6, rgba(C.bronze800, 0.08)); g.addColorStop(1, rgba(C.bronze800, 0));
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
-
-    // parallels (lower hemisphere)
-    for (var lat = -75; lat <= 0; lat += 15) {
-      var pts = [];
-      for (var lon = 0; lon <= 360; lon += 4) pts.push(project(lat, lon, rot, tilt));
-      var eq = lat === 0;
-      line(pts, [eq ? C.lineHi : C.line, eq ? 0.75 : 0.42], [C.lineDim, eq ? 0.22 : 0.1], eq ? 1.4 : 1);
-    }
-    // meridians
-    for (var m = 0; m < 360; m += 15) {
-      var mp = [];
-      for (var la = 0; la >= -90; la -= 3) mp.push(project(la, m, rot, tilt));
-      line(mp, [C.line, 0.38], [C.lineDim, 0.08], 1);
-    }
-    // three slow orbits crossing the bowl, like price paths
-    [[0.55, 0.8], [-0.7, 1.9], [0.3, 3.4]].forEach(function (o, i) {
-      var inc = o[0], ph = o[1] + (reduced ? 0 : time * (0.05 + i * 0.015));
-      var pts = [];
-      for (var a = 0; a <= 360; a += 3) {
-        var t = a * D2R;
-        var v = [Math.cos(t), Math.sin(t) * Math.sin(inc), Math.sin(t) * Math.cos(inc)];
-        var cr = Math.cos(ph), sr = Math.sin(ph);
-        var x = v[0] * cr - v[2] * sr, z = v[0] * sr + v[2] * cr, y = v[1];
-        var ll = toLatLon([x, y, z]);
-        if (ll[0] > 2) { if (pts.length > 1) line(pts, [C.lineHi, 0.4], [C.lineDim, 0.1], 1.2); pts = []; continue; }
-        pts.push(project(ll[0], ll[1], 0, tilt));
-      }
-      if (pts.length > 1) line(pts, [C.lineHi, 0.4], [C.lineDim, 0.1], 1.2);
-    });
-
-    // markets converging on the arbitrage desk at the pole
-    var pole = project(-90, 0, 0, tilt), PX = cx + pole.x * R, PY = cy + pole.y * R;
-    MARKETS.forEach(function (mk, i) {
-      var spread = W < 800 ? 0.62 : 1; // pull the outer labels in on phones so they stay on screen
-      var q = project(mk.lat, mk.lon * spread, 0, tilt), X = cx + q.x * R, Y = cy + q.y * R;
-      // converging line with a pulse travelling down to the pole
-      var lg = ctx.createLinearGradient(X, Y, PX, PY);
-      lg.addColorStop(0, rgba(C.bronze300, 0.0)); lg.addColorStop(1, rgba(C.warmHi, 0.75));
-      ctx.beginPath(); ctx.moveTo(X, Y); ctx.quadraticCurveTo((X + PX) / 2, Y + (PY - Y) * 0.75, PX, PY);
-      ctx.strokeStyle = lg; ctx.lineWidth = 1.2; ctx.stroke();
-      var t = reduced ? 0.5 : (time * 0.22 + i * 0.33) % 1;
-      var mx = (X + PX) / 2, my = Y + (PY - Y) * 0.75;
-      var bx = (1 - t) * (1 - t) * X + 2 * (1 - t) * t * mx + t * t * PX;
-      var by = (1 - t) * (1 - t) * Y + 2 * (1 - t) * t * my + t * t * PY;
-      ctx.beginPath(); ctx.arc(bx, by, 2.2, 0, Math.PI * 2); ctx.fillStyle = rgba(C.warmHi, 0.9); ctx.fill();
-      node(X, Y, 7, mk.label, false);
-    });
-    node(PX, PY, 10, 'Arbitrage desk', true);
-
-    function node(X, Y, r, label, main) {
-      var halo = ctx.createRadialGradient(X, Y, 0, X, Y, r * 5);
-      halo.addColorStop(0, rgba(C.warm, main ? 0.45 : 0.3)); halo.addColorStop(1, rgba(C.warm, 0));
-      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(X, Y, r * 5, 0, Math.PI * 2); ctx.fill();
-      // angular marker: a diamond, echoing the logo's cut lines
-      ctx.save(); ctx.translate(X, Y); ctx.rotate(Math.PI / 4);
-      ctx.fillStyle = rgba(main ? C.bronze500 : C.bronze800, 1); ctx.fillRect(-r / 1.4, -r / 1.4, r * 1.41, r * 1.41);
-      ctx.strokeStyle = rgba(C.warmHi, 0.9); ctx.lineWidth = 1; ctx.strokeRect(-r / 1.4, -r / 1.4, r * 1.41, r * 1.41);
-      ctx.restore();
-      var fs = Math.max(12, Math.min(15, W / 90));
-      ctx.font = '500 ' + fs + 'px ' + FONT_COND;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-      ctx.fillStyle = rgba(main ? C.cream : C.text, 0.95);
-      ctx.fillText(main ? label.toUpperCase() : label, X, main ? Y + r + 26 : Y - r - 10);
-    }
+    var R = W * 0.43, cx = W / 2, cy = H / 2;
+    var rot = globeRot(time);
+    sphereBase(ctx, cx, cy, R);
+    graticule(ctx, cx, cy, R, rot, domeLines, time);   // same functions as the top half, so lines and dots carry across the seam
+    landDots(ctx, s, cx, cy, R, rot, time, domeDots);
   }
 
   /* ---------- header state ---------- */

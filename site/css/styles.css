@@ -128,8 +128,6 @@ a { color: inherit; text-decoration: none; }
   margin: clamp(28px, 5vh, 64px) 0 0;   /* centred by left + translate only; auto margins would add a second offset */
   left: 50%; transform: translateX(-50%);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
 }
 .dome { position: absolute; left: 0; top: 0; width: 100%; height: 200%; }
 
@@ -138,8 +136,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  margin-top: -14vw;               /* pull the band up under the fading globe */
-  padding-top: calc(14vw + var(--space-12));
+  padding-bottom: var(--space-24);
   text-align: center;
 }
 .between-glow { position: absolute; inset: 0 -15% 35%; z-index: -2; filter: blur(80px); pointer-events: none; }
@@ -164,52 +161,73 @@ a { color: inherit; text-decoration: none; }
   max-width: 560px; margin: var(--space-6) auto 0; text-wrap: balance;
 }
 
+/* the five pillars sit on the lower half of the globe: three above, two below */
 .pillars {
-  list-style: none; padding: 0; margin: var(--space-16) auto 0;
-  display: flex; flex-wrap: wrap; justify-content: center;
-  max-width: 900px;
-  row-gap: var(--space-8);
+  list-style: none; padding: 0; margin: 0;
+  position: absolute; inset: 0; z-index: 2;
 }
 .pillars li {
-  display: flex; flex-direction: column; align-items: center; gap: var(--space-1);
-  padding: 0 var(--space-8);
-  flex: 0 0 auto;
-  position: relative;
+  position: absolute; left: var(--x); top: var(--y); translate: -50% 0;   /* translate, so the reveal's transform still works */
+  width: 168px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .8);
 }
-.pillars li + li::before {
-  content: ""; position: absolute; left: 0; top: 10%; bottom: 10%; width: 1px;
-  background: linear-gradient(to bottom, transparent, var(--neutral-400), transparent);
+.pillars li:nth-child(1) { --x: 30%; --y: 24%; }
+.pillars li:nth-child(2) { --x: 50%; --y: 24%; }
+.pillars li:nth-child(3) { --x: 70%; --y: 24%; }
+.pillars li:nth-child(4) { --x: 40%; --y: 47%; }
+.pillars li:nth-child(5) { --x: 60%; --y: 47%; }
+.pillar-icon {
+  width: 56px; height: 56px; margin-bottom: var(--space-2); overflow: visible;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .5));
 }
-.pillars li:nth-child(4)::before { display: none; }   /* new row starts clean on desktop */
-.pillars li:nth-child(4) { margin-left: 0; }
+.pillar-icon .pi-hex, .pillar-icon .pi-ring { stroke-width: 2; stroke-linejoin: round; }
+.pillar-icon .pi-glyph { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35)); }
 .pillar-k {
-  font-family: var(--font-condensed); font-weight: 500; font-size: 14px; line-height: 18px;
+  font-family: var(--font-condensed); font-weight: 500; font-size: 11px; line-height: 14px;
   letter-spacing: .08em; text-transform: uppercase; color: var(--neutral-600);
 }
 .pillar-v {
-  font-family: var(--font-display); font-weight: 700; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.15;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.2;
   color: var(--neutral-800);
 }
-/* force 3 + 2 rows on wide screens */
-@media (min-width: 900px) {
-  .pillars { display: grid; grid-template-columns: repeat(6, 1fr); }
-  .pillars li { grid-column: span 2; }
-  .pillars li:nth-child(4) { grid-column: 2 / span 2; }
-  .pillars li:nth-child(5) { grid-column: 4 / span 2; }
-}
 
-/* Wire half-globe: the canvas draws a full sphere; the wrapper shows only its lower half. */
-.bowl-wrap {
+/* Wire half-globe: the same size as the earth above, so the two halves meet at the equator.
+   The canvas draws a full sphere; the wrapper shows only its lower half. */
+.bowl-stage {
   position: relative; z-index: 1;
-  width: min(1320px, 130vw);
+  width: min(1180px, 120vw);
   aspect-ratio: 2 / 1;
-  margin: clamp(8px, 2vw, 40px) 0 0;
   left: 50%; transform: translateX(-50%);
+}
+.bowl-wrap {
+  position: absolute; inset: 0;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
 }
 .bowl { position: absolute; left: 0; bottom: 0; width: 100%; height: 200%; }
+
+.between-copy { margin-top: calc(-1 * var(--space-12)); }
+
+/* the three markets converging on the arbitrage desk */
+.flow { max-width: 600px; margin: var(--space-16) auto 0; }
+.flow-markets {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+}
+.flow-markets li, .flow-desk {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-3);
+  font-family: var(--font-condensed); font-weight: 500; font-size: 14px; line-height: 18px; color: var(--neutral-700);
+}
+.flow-node {
+  width: 9px; height: 9px; transform: rotate(45deg);
+  background: var(--bronze-800); border: 1px solid var(--bronze-200);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--glow-amber) 60%, transparent);
+}
+.flow-lines { display: block; width: 100%; height: 64px; margin-top: var(--space-3); }
+.flow-desk { margin: var(--space-2) 0 0; flex-direction: column-reverse; color: var(--neutral-800); letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+.flow-node.main { width: 13px; height: 13px; background: var(--bronze); }
 
 /* ---------- Motion ---------- */
 @keyframes drift-a { to { transform: translate(4%, 6%) scale(1.08); } }
@@ -235,10 +253,20 @@ a { color: inherit; text-decoration: none; }
   .nav.open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
   .nav a { padding: 12px 14px; font-size: 15px; }
   .brand img { width: 120px; }
-  .pillars li { padding: 0 var(--space-4); flex-basis: 50%; }
-  .pillars li::before { display: none; }
-  .dome-wrap { width: 150vw; }
-  .bowl-wrap { width: 160vw; }
+  .dome-wrap, .bowl-stage { width: 150vw; }
+  .pillars {
+    inset: 5% auto auto 50%; transform: translateX(-50%);
+    width: min(100vw - 32px, 420px);
+    display: grid; grid-template-columns: repeat(6, 1fr); row-gap: var(--space-4);
+  }
+  .pillars li { position: static; translate: none; width: auto; grid-column: span 2; }
+  .pillars li:nth-child(4) { grid-column: 2 / span 2; }
+  .pillars li:nth-child(5) { grid-column: 4 / span 2; }
+  .pillar-icon { width: 40px; height: 40px; margin-bottom: 4px; }
+  .pillar-k { font-size: 10px; line-height: 13px; letter-spacing: .05em; }
+  .pillar-v { font-size: 15px; }
+  .between-copy { margin-top: var(--space-8); }
+  .flow-markets li { font-size: 13px; }
 }
 
 /* ---------- 4. Contact ---------- */
@@ -416,142 +444,99 @@ a { color: inherit; text-decoration: none; }
   .tabs { gap: var(--space-6); }
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Footer ----------
+   Brand and three link columns on top; the Dubai skyline, drawn in bronze line,
+   rises along the bottom edge; the legal bar sits beneath it. */
 .site-footer {
-  position: relative; overflow: hidden;
-  background: var(--neutral-50);
+  position: relative; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(70% 60% at 50% 100%, color-mix(in srgb, var(--bronze) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, #0c0907 0%, #17110c 60%, #22180f 100%);
   border-top: 1px solid var(--neutral-200);
   padding: 0 var(--space-12);
 }
-.site-footer::before { /* faint ember warmth rising from below */
-  content: ""; position: absolute; left: 50%; bottom: -30%; width: 120%; height: 70%;
-  transform: translateX(-50%); pointer-events: none;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-ember) 16%, transparent), color-mix(in srgb, var(--glow-oxblood) 8%, transparent) 55%, transparent);
-  filter: blur(20px);
-}
 .site-footer > * { position: relative; max-width: 1240px; margin-inline: auto; }
 
-/* The spread band: two price lines meet wherever the pointer is */
-.spread {
-  position: relative; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--space-8);
-  padding: 250px 0 var(--space-12);
-  min-height: 0;
-  cursor: crosshair;
-}
-.spread-lines { position: absolute; inset: 0 calc(50% - 50vw); width: 100vw; height: 100%; pointer-events: none; }
-.spread-copy { position: relative; pointer-events: none; }
-.spread-copy .eyebrow { margin-bottom: var(--space-4); }
-.spread-title {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(44px, 7vw, 104px); line-height: .98; letter-spacing: -.035em;
-  margin: 0; color: var(--neutral-800);
-}
-.spread-title .hl {
-  background: linear-gradient(100deg, var(--hl-1), var(--hl-2) 45%, var(--hl-3));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.spread-hint {
-  display: inline-flex; align-items: center; gap: 10px; margin: var(--space-6) 0 0;
-  font-family: var(--font-condensed); font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--neutral-500); transition: opacity .4s var(--ease-out);
-}
-.spread.touched .spread-hint { opacity: 0; }
-.hint-short { display: none; }
-.hint-dot { width: 7px; height: 7px; background: var(--bronze); transform: rotate(45deg); animation: hint 1.8s var(--ease-out) infinite; }
-@keyframes hint { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-.spread-cta {
-  position: relative; display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-condensed); font-weight: 500; font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--on-accent); background: var(--accent);
-  padding: 16px 22px; border-radius: var(--radius-xs); cursor: pointer;
-  transition: background-color .2s var(--ease-out), box-shadow .2s var(--ease-out);
-}
-.spread-cta:hover { background: var(--accent-hover); box-shadow: var(--shadow-glow); }
-.spread-cta .arrow { transition: transform .2s var(--ease-out); }
-.spread-cta:hover .arrow { transform: translateX(4px); }
-
-/* Info grid */
-.foot-grid {
-  display: grid; grid-template-columns: 1.3fr .8fr 1.2fr; gap: var(--space-12);
-  padding: var(--space-12) 0 var(--space-16);
-  border-top: 1px solid var(--neutral-300);
-}
-.foot-k {
-  display: block; margin-bottom: var(--space-6);
-  font-family: var(--font-condensed); font-weight: 500; font-size: 13px; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--bronze-300);
-}
+.foot-top { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: var(--space-16); padding: var(--space-24) 0 var(--space-12); }
 .foot-brand img { width: 168px; height: auto; margin-bottom: var(--space-6); }
-.foot-brand p { margin: 0; max-width: 380px; color: var(--neutral-700); font-size: 16px; line-height: 26px; }
-.foot-brand address { margin-top: var(--space-8); font-style: normal; color: var(--neutral-600); font-size: 15px; line-height: 24px; }
-.foot-brand address .foot-k { margin-bottom: var(--space-3); }
+.foot-brand p { margin: 0; max-width: 360px; color: var(--neutral-700); font-size: 16px; line-height: 26px; }
+.social { display: flex; gap: var(--space-3); margin-top: var(--space-8); }
+.social a {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--neutral-300); color: var(--neutral-700);
+  transition: color .2s, background-color .2s, border-color .2s, transform .3s var(--ease-out);
+}
+.social a:hover { color: var(--on-accent); background: var(--bronze); border-color: var(--bronze); transform: translateY(-3px); }
+.social svg { width: 17px; height: 17px; fill: currentColor; }
 
-.foot-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.foot-nav a {
-  position: relative; display: flex; align-items: baseline; gap: 14px; padding: 7px 0;
-  color: var(--neutral-800); font-size: 17px;
-}
-.foot-nav i {
-  font-style: normal; font-family: var(--font-condensed); font-size: 12px; letter-spacing: .1em;
-  color: var(--neutral-500); transition: color .25s var(--ease-out);
-}
-.foot-nav span { position: relative; transition: transform .3s var(--ease-out), color .25s; }
-.foot-nav span::before { /* two hairlines converge into a point as you hover */
-  content: ""; position: absolute; left: -26px; top: 50%; width: 18px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--bronze-300));
-  transform: scaleX(0); transform-origin: right; transition: transform .3s var(--ease-out);
-}
-.foot-nav a:hover span, .foot-nav a:focus-visible span { transform: translateX(24px); color: var(--bronze-100); }
-.foot-nav a:hover span::before, .foot-nav a:focus-visible span::before { transform: scaleX(1); }
-.foot-nav a:hover i, .foot-nav a:focus-visible i { color: var(--bronze-300); }
+.foot-cols { display: grid; grid-template-columns: .8fr 1.5fr 1fr; gap: var(--space-12); }
+.foot-h { margin: 0 0 var(--space-6); font-family: var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: -.005em; color: var(--neutral-800); }
+.foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.foot-col nav a, nav.foot-col a { color: var(--neutral-600); font-size: 15px; transition: color .2s; }
+nav.foot-col a:hover { color: var(--bronze-200); }
+.foot-col address { font-style: normal; color: var(--neutral-600); font-size: 15px; line-height: 24px; }
 
-.mail-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
-.mail-list li { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: var(--space-3); padding-bottom: var(--space-4); border-bottom: 1px solid var(--neutral-200); }
-.mail-k { font-family: var(--font-condensed); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--neutral-500); }
-.mail-list a { color: var(--neutral-800); font-size: 17px; overflow-wrap: anywhere; background: linear-gradient(var(--bronze-300), var(--bronze-300)) 0 100% / 0 1px no-repeat; transition: background-size .3s var(--ease-out), color .2s; }
-.mail-list a:hover { color: var(--bronze-100); background-size: 100% 1px; }
+.mail-list { gap: var(--space-4) !important; }
+.mail-list li { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: var(--space-3); row-gap: 2px; }
+.mail-k { grid-column: 1 / -1; font-family: var(--font-condensed); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--neutral-500); }
+.mail-list a { color: var(--neutral-700); font-size: 15px; overflow-wrap: anywhere; transition: color .2s; }
+.mail-list a:hover { color: var(--bronze-200); }
 .copy {
-  font: 500 11px/1 var(--font-condensed); letter-spacing: .12em; text-transform: uppercase;
-  color: var(--neutral-600); background: transparent; border: 1px solid var(--neutral-300);
-  padding: 7px 9px; border-radius: var(--radius-xs); cursor: pointer;
-  transition: color .2s, border-color .2s, background-color .2s;
+  font: 500 11px/1 var(--font-condensed); letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 9px; color: var(--neutral-600); background: none; cursor: pointer;
+  border: 1px solid var(--neutral-300); border-radius: var(--radius-xs); transition: color .2s, border-color .2s, background-color .2s;
 }
 .copy:hover { color: var(--bronze-100); border-color: var(--bronze-600); }
 .copy.done { color: var(--on-accent); background: var(--bronze); border-color: var(--bronze); }
 
-.foot-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
-.social { display: flex; gap: var(--space-3); }
-.social a {
-  display: grid; place-items: center; width: 42px; height: 42px;
-  border: 1px solid var(--neutral-300); border-radius: var(--radius-xs); color: var(--neutral-700);
-  transition: color .2s, border-color .2s, transform .25s var(--ease-out), background-color .2s;
-}
-.social a:hover { color: var(--on-accent); background: var(--bronze); border-color: var(--bronze); transform: translateY(-3px) rotate(-4deg); }
-.social svg { width: 17px; height: 17px; fill: currentColor; }
-.clock { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-condensed); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--neutral-600); }
+.clock { display: inline-flex; align-items: center; gap: 10px; margin-top: var(--space-6); font-family: var(--font-condensed); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--neutral-600); }
 .clock b { color: var(--neutral-800); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
-.clock-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bronze-300); box-shadow: 0 0 0 0 rgba(203,160,127,.6); animation: ping 2.4s ease-out infinite; }
+.clock-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bronze-300); animation: ping 2.4s ease-out infinite; }
 @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(203,160,127,.55); } 80%, 100% { box-shadow: 0 0 0 9px rgba(203,160,127,0); } }
 
-/* Giant wordmark: outlined, lit in bronze where the pointer is */
-.wordmark {
-  --mx: 50%;
+/* the skyline: full-bleed, fading out at the sides and into the bar below */
+.foot-skyline { max-width: none !important; margin: 0 calc(-1 * var(--space-12)); display: flex; justify-content: center; pointer-events: none; }
+/* the giant wordmark: outlined letters; under the pointer they fill with the Dubai skyline */
+.foot-skyline { position: relative; }
+.foot-skyline .wordmark {
+  --mx: 50%; --my: 50%;
+  position: relative; width: 100%; margin-bottom: var(--space-4); padding-top: var(--space-8);   /* clear of the bar line below */
   font-family: var(--font-display); font-weight: 700;
   font-size: clamp(60px, 18.5vw, 268px); line-height: .78; letter-spacing: -.045em;
   text-align: center; white-space: nowrap; user-select: none;
-  margin-bottom: -.1em;
   color: transparent;
   -webkit-text-stroke: 1px color-mix(in srgb, var(--neutral-500) 35%, transparent);
-  background: radial-gradient(260px circle at var(--mx) 55%, color-mix(in srgb, var(--glow-champagne) 55%, transparent), color-mix(in srgb, var(--bronze) 18%, transparent) 45%, transparent 70%);
-  -webkit-background-clip: text; background-clip: text;
   -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 96%);
           mask-image: linear-gradient(180deg, #000 30%, transparent 96%);
+}
+.foot-skyline .wordmark::after {
+  content: attr(data-text);
+  position: absolute; inset: var(--space-8) 0 0;
+  color: transparent; -webkit-text-stroke: 0;
+  background:
+    url("../assets/skyline-dubai.png") center bottom / auto 110% repeat-x,
+    linear-gradient(180deg, color-mix(in srgb, var(--bronze) 14%, transparent), color-mix(in srgb, var(--glow-champagne) 30%, transparent));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-mask-image: radial-gradient(280px circle at var(--mx) var(--my), #000 25%, transparent 72%);
+          mask-image: radial-gradient(280px circle at var(--mx) var(--my), #000 25%, transparent 72%);
+  opacity: 0; transition: opacity .5s var(--ease-out);
+  filter: brightness(1.9) saturate(1.1);
+}
+.foot-skyline .wordmark.lit::after { opacity: 1; }
+@media (hover: none) {   /* no pointer to follow: show the skyline faintly through the whole word */
+  .foot-skyline .wordmark::after { opacity: .55; -webkit-mask-image: none; mask-image: none; }
+}
+.foot-skyline img {
+  position: relative; z-index: 1;
+  display: block; width: min(1240px, 100%); height: auto; opacity: .85;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 
 .foot-bar {
   display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap;
   padding: var(--space-6) 0 calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--neutral-300);
+  border-top: 1px solid color-mix(in srgb, var(--bronze-600) 50%, transparent);
   font-size: 14px; color: var(--neutral-500);
 }
 .foot-bar p { margin: 0; margin-right: auto; }
@@ -567,23 +552,26 @@ a { color: inherit; text-decoration: none; }
 .to-top:hover { background: var(--bronze); border-color: var(--bronze); color: var(--on-accent); }
 .to-top:hover span { transform: rotate(-45deg) translateY(-3px); }
 
-@media (max-width: 960px) {
+@media (max-width: 1000px) {
   .site-footer { padding: 0 var(--space-6); }
-  .spread { grid-template-columns: 1fr; align-items: start; min-height: 0; padding: 220px 0 var(--space-12); }
-  .spread-cta { justify-self: start; }
-  .foot-grid { grid-template-columns: 1fr 1fr; }
-  .foot-brand { grid-column: 1 / -1; }
+  .foot-top { grid-template-columns: 1fr; gap: var(--space-12); padding-top: var(--space-16); }
+  .foot-skyline { margin: 0 calc(-1 * var(--space-6)); }
 }
-@media (max-width: 560px) {
-  .foot-grid { grid-template-columns: 1fr; gap: var(--space-12); }
-  .mail-list li { grid-template-columns: 1fr auto; }
-  .mail-k { grid-column: 1 / -1; }
+@media (max-width: 640px) {
+  .foot-cols { grid-template-columns: 1fr 1fr; gap: var(--space-10, 40px) var(--space-6); }
+  .foot-cols .foot-col:nth-child(2) { grid-column: 1 / -1; grid-row: 1; }
+  .foot-skyline img { width: 160%; max-width: none; }
   .foot-bar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--space-4); line-height: 22px; }
   .foot-bar .legal { grid-column: 1 / -1; grid-row: 2; gap: var(--space-2) var(--space-4); }
   .to-top { margin-right: 6px; }
-  .hint-long { display: none; }
-  .hint-short { display: inline; }
 }
+@media (prefers-reduced-motion: reduce) { .clock-dot { animation: none; } }
+
+/* ---------- Home: entrance + scroll reveal (same timing as the inner pages) ---------- */
+.js .rise { opacity: 0; transform: translateY(18px); animation: rise .9s var(--ease-out) forwards; animation-delay: var(--d, 0s); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+.js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); transition-delay: var(--d, 0s); }
+.js .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .hint-dot, .clock-dot { animation: none; }
+  .js .rise, .js .reveal { opacity: 1; transform: none; animation: none; transition: none; }
 }

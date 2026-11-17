@@ -175,10 +175,15 @@
   var mark = document.getElementById('wordmark');
   var foot = document.querySelector('.site-footer');
   if (mark && foot) {
+    // the skyline sits on top of the word, so track the pointer over the footer and light the word when it's over it
     foot.addEventListener('pointermove', function (e) {
       var r = mark.getBoundingClientRect();
-      mark.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+      var x = e.clientX - r.left, y = e.clientY - r.top;
+      mark.style.setProperty('--mx', x.toFixed(0) + 'px');
+      mark.style.setProperty('--my', y.toFixed(0) + 'px');
+      mark.classList.toggle('lit', x > -40 && x < r.width + 40 && y > -60 && y < r.height + 40);
     });
+    foot.addEventListener('pointerleave', function () { mark.classList.remove('lit'); });
   }
 
   /* ---------- Dubai clock ---------- */
