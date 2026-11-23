@@ -2,6 +2,7 @@
 :root {
   color-scheme: dark;
   --black: #000000;
+  --page: #171311;   /* the page background: a warm charcoal, a step lighter than pure black */
   --bronze: #ae8058;
   --cream: #e5d6cc;
   --white: #ffffff;
@@ -26,6 +27,26 @@
   --bronze-800: #573d29;
   --bronze-900: #39281b;
   --bronze-950: #21170f;
+  /* more shades of the same bronze family, so the brand colour has depth without everything reading gold:
+     taupe = bronze with the yellow taken out (greyed), umber = bronze pushed deeper and slightly rosy */
+  --taupe-50: #f3ede8;
+  --taupe-100: #e6dcd3;
+  --taupe-200: #cfc0b3;
+  --taupe-300: #b6a291;
+  --taupe-400: #9a8474;
+  --taupe-500: #7d6a5c;
+  --taupe-600: #625247;
+  --taupe-700: #4a3e36;
+  --taupe-800: #342b26;
+  --taupe-900: #221c19;
+  --taupe-950: #161210;
+  --umber-100: #e9d9d0;
+  --umber-300: #b99484;
+  --umber-500: #8a6455;
+  --umber-700: #4e3830;
+  --umber-800: #33251f;
+  --umber-900: #1f1714;
+  --glow-cocoa: #5a4033;
   --glow-ember: #b4592e;
   --glow-amber: #d69a55;
   --glow-champagne: #ead2ae;

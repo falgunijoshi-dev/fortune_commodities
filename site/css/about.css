@@ -1,7 +1,6 @@
 /* Who we are. Minimal layout in the warm (original) palette; motion comes from
    scroll (word reveal, timeline draw, fade-rise) and hover (venture spotlight). */
 
-.nav a[aria-current="page"] { color: var(--neutral-800); background: var(--neutral-200); }
 
 .about .wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--space-12); }
 .about .hl {
@@ -37,7 +36,7 @@
 }
 .page-hero::after { /* fade into the next section */
   content: ""; position: absolute; inset: auto 0 0; height: 30%; z-index: -1;
-  background: linear-gradient(transparent, var(--black));
+  background: linear-gradient(transparent, var(--page));
 }
 .page-hero-inner { max-width: 900px; }
 .page-title {
@@ -55,10 +54,10 @@
 }
 .scroll-cue span {
   position: absolute; left: 50%; top: 8px; width: 2px; height: 8px; margin-left: -1px; border-radius: 2px;
-  background: var(--bronze-300); animation: cue 1.8s var(--ease-out) infinite;
+  background: var(--taupe-300); animation: cue 1.8s var(--ease-out) infinite;
 }
 @keyframes cue { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
-.scroll-cue:hover { border-color: var(--bronze-300); }
+.scroll-cue:hover { border-color: var(--taupe-300); }
 
 /* ---------- 2. Statement ---------- */
 .story { padding: var(--space-24) 0 var(--space-32); }
@@ -73,7 +72,7 @@
 .story-sub {
   margin: var(--space-12) 0 0 auto; max-width: 560px;
   font-size: 20px; line-height: 32px; color: var(--neutral-700);
-  padding-left: var(--space-6); border-left: 1px solid var(--bronze-700);
+  padding-left: var(--space-6); border-left: 1px solid var(--taupe-700);
 }
 
 /* ---------- section heads ---------- */
@@ -100,7 +99,7 @@
 .milestone { position: relative; padding-top: var(--space-12); }
 .node {
   position: absolute; top: 0; left: 0; width: 15px; height: 15px; z-index: 1;
-  background: var(--black); border: 1px solid var(--neutral-400); transform: rotate(45deg);
+  background: var(--page); border: 1px solid var(--neutral-400); transform: rotate(45deg);
   transition: background-color .4s var(--ease-out), border-color .4s, box-shadow .4s;
 }
 .milestone.lit .node { background: var(--bronze); border-color: var(--bronze-200); box-shadow: 0 0 0 6px color-mix(in srgb, var(--bronze) 18%, transparent); }
@@ -120,11 +119,11 @@
 
 /* ---------- 4. Ventures ---------- */
 .ventures { padding: var(--space-24) 0 var(--space-32); border-top: 1px solid var(--neutral-200); }
-.venture-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+.venture-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }   /* stacked, one below the other */
 .venture {
   --x: 50%; --y: 0%;
   position: relative; overflow: hidden; isolation: isolate;
-  padding: var(--space-12); min-height: 100%;
+  padding: 0;
   background: var(--neutral-100);
   border: 1px solid var(--neutral-200);
   transition: border-color .4s var(--ease-out), transform .5s var(--ease-out), opacity .9s var(--ease-out);
@@ -134,19 +133,62 @@
   background: radial-gradient(420px circle at var(--x) var(--y), color-mix(in srgb, var(--glow-amber) 16%, transparent), transparent 65%);
   transition: opacity .4s var(--ease-out);
 }
-.venture:hover { border-color: var(--bronze-800); }
+.venture:hover, .venture.open { border-color: var(--umber-700); }
 .js .venture.reveal.in:hover { transform: translateY(-4px); }
 .venture:hover::before { opacity: 1; }
-.v-lines { /* converging corner lines that slide in on hover */
-  position: absolute; right: 0; top: 0; width: 180px; height: 120px; z-index: -1; pointer-events: none;
-  background:
-    linear-gradient(196deg, transparent 49.6%, color-mix(in srgb, var(--bronze-300) 50%, transparent) 50%, transparent 50.4%),
-    linear-gradient(164deg, transparent 49.6%, color-mix(in srgb, var(--bronze-300) 30%, transparent) 50%, transparent 50.4%);
-  opacity: 0; transform: translateX(30px); transition: opacity .5s var(--ease-out), transform .6s var(--ease-out);
+/* Hover: the angled form of the logo's F, carried in as layered shapes that slide
+   into the corner and overlap: a solid bar, a dark wedge, a band of fine lines at
+   the logo's angle, and a lighter chevron on top. */
+.v-shapes {
+  position: absolute; right: 0; top: 0; width: min(280px, 50%); height: auto; z-index: -1; pointer-events: none;
+  overflow: visible;
 }
-.venture:hover .v-lines { opacity: 1; transform: none; }
-.v-top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); margin-bottom: var(--space-12); }
-.v-index { font-family: var(--font-condensed); font-size: 13px; letter-spacing: .14em; color: var(--bronze-300); }
+.v-shapes .vs { opacity: 0; transform: translateX(48px); transition: opacity .6s var(--ease-out), transform .8s var(--ease-out); }
+.v-shapes .vs-bar   { fill: var(--bronze-800); }
+.v-shapes .vs-back  { fill: var(--bronze-700); }
+.v-shapes .vs-hatch { fill: var(--bronze-300); opacity: .55; }
+.v-shapes .vs-front { fill: var(--bronze-200); }
+:is(.venture:hover, .venture.open) .v-shapes .vs { transform: none; }
+:is(.venture:hover, .venture.open) .vs-bar   { opacity: .7;  transition-delay: 0s; }
+:is(.venture:hover, .venture.open) .vs-back  { opacity: .5; transition-delay: .06s; }
+:is(.venture:hover, .venture.open) .vs-lines { opacity: 1;   transition-delay: .12s; }
+:is(.venture:hover, .venture.open) .vs-front { opacity: .45; transition-delay: .18s; }
+@media (hover: none) { /* no hover on touch screens: keep the shapes quietly in place */
+  .v-shapes .vs { transform: none; }
+  .v-shapes .vs-bar { opacity: .5; } .v-shapes .vs-back { opacity: .35; } .v-shapes .vs-lines { opacity: .6; } .v-shapes .vs-front { opacity: .3; }
+}
+@media (prefers-reduced-motion: reduce) { .v-shapes .vs { transform: none; transition: opacity .3s; } }
+/* accordion: the header is a button (number, name, plus); the story slides open beneath it */
+.v-head { margin: 0; }
+.v-toggle {
+  display: grid; grid-template-columns: 1fr auto; grid-template-areas: "idx plus" "name plus"; row-gap: var(--space-8); align-items: end;
+  width: 100%; padding: var(--space-12); text-align: left; cursor: pointer;
+  background: none; border: 0; color: inherit; font: inherit;
+}
+.v-toggle .v-index { grid-area: idx; }
+.v-toggle .v-name { grid-area: name; display: block; }
+.v-plus {
+  grid-area: plus; align-self: end; position: relative; width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--neutral-400); background: color-mix(in srgb, var(--page) 60%, transparent);
+  transition: border-color .3s, background-color .3s, transform .45s var(--ease-out);
+}
+.v-plus::before, .v-plus::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 1.5px; margin: -.75px 0 0 -7px;
+  background: var(--neutral-800); transition: transform .45s var(--ease-out);
+}
+.v-plus::after { transform: rotate(90deg); }
+.v-toggle:hover .v-plus { border-color: var(--bronze-300); }
+.venture.open .v-plus { background: var(--bronze); border-color: var(--bronze); transform: rotate(180deg); }
+.venture.open .v-plus::before, .venture.open .v-plus::after { background: var(--on-accent); }
+.venture.open .v-plus::after { transform: rotate(0deg); }   /* plus becomes minus */
+.v-toggle:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -6px; }
+.v-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease-out); }
+.v-body-in { min-height: 0; overflow: hidden; padding: 0 var(--space-12); opacity: 0; transform: translateY(-8px); transition: opacity .4s var(--ease-out), transform .55s var(--ease-out), padding .55s var(--ease-out); }
+.venture.open .v-body { grid-template-rows: 1fr; }
+.v-body-in p { max-width: 780px; }   /* comfortable line length now the cards run full width */
+.venture.open .v-body-in { opacity: 1; transform: none; padding-bottom: var(--space-12); transition-delay: .08s; }
+@media (prefers-reduced-motion: reduce) { .v-body, .v-body-in, .v-plus, .v-plus::before, .v-plus::after { transition: none; } }
+.v-index { font-family: var(--font-condensed); font-size: 13px; letter-spacing: .14em; color: var(--taupe-300); }
 .v-tag {
   font-family: var(--font-condensed); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--neutral-600); border: 1px solid var(--neutral-300); padding: 5px 10px; border-radius: var(--radius-pill);
@@ -155,8 +197,7 @@
   font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 3.6vw, 52px); line-height: 1; letter-spacing: -.03em;
   margin: 0; color: var(--neutral-800); transition: color .3s;
 }
-.venture:hover .v-name { color: var(--bronze-100); }
-.v-name + p { margin-top: var(--space-8) !important; }
+:is(.venture:hover, .venture.open) .v-name { color: var(--bronze-100); }
 .v-full { margin: var(--space-2) 0 var(--space-8); font-family: var(--font-condensed); font-size: 15px; letter-spacing: .06em; color: var(--neutral-500); }
 .venture p:not(.v-full) { margin: 0 0 var(--space-4); font-size: 16px; line-height: 27px; color: var(--neutral-700); }
 .v-chips { list-style: none; padding: 0; margin: var(--space-8) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
@@ -165,8 +206,8 @@
   padding: 6px 12px; border: 1px solid var(--neutral-300); color: var(--neutral-700); border-radius: var(--radius-xs);
   transition: border-color .3s, color .3s, background-color .3s;
 }
-.venture:hover .v-chips li { border-color: var(--bronze-800); }
-.v-chips li:hover { background: var(--bronze-900); color: var(--bronze-100); }
+.venture:hover .v-chips li { border-color: var(--umber-700); }
+.v-chips li:hover { background: var(--taupe-900); color: var(--taupe-100); }
 
 /* ---------- 5. Vision and mission ---------- */
 .purpose { padding: var(--space-16) 0 var(--space-32); border-top: 1px solid var(--neutral-200); }
@@ -176,17 +217,19 @@
 }
 .purpose-row::after { /* a bronze rule sweeps across when the row arrives */
   content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%;
-  background: linear-gradient(90deg, var(--bronze-300), transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--taupe-300) 45%, transparent), transparent);
   transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease-out) .2s;
 }
 .purpose-row.in::after, html:not(.js) .purpose-row::after { transform: scaleX(1); }
+.purpose-row:last-child { border-bottom: 0; }          /* no rule under the mission */
+.purpose-row:last-child::after { display: none; }
 .p-label { display: flex; flex-direction: column; gap: var(--space-4); padding-top: 14px; }
 .p-label .eyebrow { margin: 0; }
 .p-num {
   font-family: var(--font-display); font-weight: 700; font-size: 88px; line-height: .8; letter-spacing: -.04em;
   color: transparent; -webkit-text-stroke: 1px var(--neutral-400); transition: -webkit-text-stroke-color .4s;
 }
-.purpose-row:hover .p-num { -webkit-text-stroke-color: var(--bronze-300); }
+.purpose-row:hover .p-num { -webkit-text-stroke-color: var(--taupe-300); }
 .p-statement {
   font-family: var(--font-display); font-weight: 700;
   font-size: clamp(28px, 3.2vw, 46px); line-height: 1.14; letter-spacing: -.025em;
@@ -198,17 +241,17 @@
 .journey, .purpose {
   position: relative;
   background:
-    radial-gradient(70% 70% at 80% 30%, color-mix(in srgb, var(--bronze) 9%, transparent), transparent 70%),
-    linear-gradient(180deg, #1a130d 0%, #22180f 50%, #160f0a 100%);
-  border-top: 1px solid var(--bronze-800);
-  border-bottom: 1px solid var(--bronze-900);
+    radial-gradient(70% 70% at 80% 30%, color-mix(in srgb, var(--taupe-500) 10%, transparent), transparent 70%),
+    linear-gradient(180deg, #1c1714 0%, #241c18 50%, #1a1512 100%);
+  border-top: 1px solid var(--taupe-800);
+  border-bottom: 1px solid var(--taupe-900);
 }
 .purpose { background:
-    radial-gradient(70% 70% at 20% 30%, color-mix(in srgb, var(--bronze) 9%, transparent), transparent 70%),
-    linear-gradient(180deg, #1a130d 0%, #22180f 50%, #160f0a 100%); }
-.ventures { background: var(--black); border-top: 0; }
-.journey .node { background: #1c140e; }
-.purpose-row { border-bottom-color: color-mix(in srgb, var(--bronze-700) 40%, transparent); }
+    radial-gradient(70% 70% at 20% 30%, color-mix(in srgb, var(--umber-500) 10%, transparent), transparent 70%),
+    linear-gradient(180deg, #1a1613 0%, #221d1a 50%, #181411 100%); }
+.ventures { background: var(--page); border-top: 0; }
+.journey .node { background: #241c18; }
+.purpose-row { border-bottom-color: color-mix(in srgb, var(--umber-500) 26%, transparent); }
 .purpose .p-sub { color: var(--neutral-700); }
 
 /* ---------- responsive ---------- */
@@ -228,8 +271,10 @@
   .timeline::after { transform-origin: top; transform: scaleY(var(--p)); }
   .milestone { padding-top: 0; }
   .node { left: calc(-1 * var(--space-12)); top: 6px; }
-  .venture { padding: var(--space-8) var(--space-6); }
-  .v-top { margin-bottom: var(--space-8); }
+  .v-toggle { padding: var(--space-8) var(--space-6); row-gap: var(--space-6); }
+  .v-body-in { padding-inline: var(--space-6); }
+  .venture.open .v-body-in { padding-bottom: var(--space-8); }
+  .v-plus { width: 38px; height: 38px; }
   .sec-head { margin-bottom: var(--space-12); }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,5 @@
 /* Footer: the spread band (two price lines that meet at the pointer),
-   the lit wordmark, a live Dubai clock, copy-to-clipboard and back-to-top. */
+   the self-lit wordmark, a live Dubai clock, copy-to-clipboard and back-to-top. */
 (function () {
   'use strict';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -171,14 +171,31 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(size);
   }
 
-  /* ---------- wordmark lit by the pointer ---------- */
+  /* ---------- wordmark lit by a light that zig-zags across on its own ---------- */
+  // The light runs left to right, then straight back right to left, without stopping,
+  // weaving up and down through the letters as it goes.
   var mark = document.getElementById('wordmark');
-  var foot = document.querySelector('.site-footer');
-  if (mark && foot) {
-    foot.addEventListener('pointermove', function (e) {
-      var r = mark.getBoundingClientRect();
-      mark.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-    });
+  if (mark && !reduced) {
+    var PASS = 7, ZIGS = 4, sweeping = false, start = 0;   // seconds per pass across the word; up-and-down turns per pass
+    function ease(p) { return 0.5 - Math.cos(p * Math.PI) / 2; }      // soft turn at each end
+    function tri(v) { var f = v - Math.floor(v); return f < 0.5 ? f * 2 : 2 - f * 2; }   // 0..1..0 zig-zag
+    function sweep(now) {
+      if (!sweeping) return;
+      var r = mark.getBoundingClientRect(), t = (now - start) / 1000 / PASS;
+      var leg = Math.floor(t), p = t - leg, e = ease(p);
+      var u = leg % 2 ? 1 - e : e;                                   // forward, then back
+      var x = 0.03 * r.width + u * 0.94 * r.width;          // turns on the first and last letters, never off the word
+      var z = tri(u * ZIGS);                                         // the zig-zag, tied to position so both directions trace the same path
+      z = z * z * (3 - 2 * z);                                       // round the points slightly
+      var y = r.height * (0.3 + z * 0.55);
+      mark.style.setProperty('--mx', x.toFixed(0) + 'px');
+      mark.style.setProperty('--my', y.toFixed(0) + 'px');
+      requestAnimationFrame(sweep);
+    }
+    new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting && !sweeping) { sweeping = true; start = performance.now(); mark.classList.add('lit'); requestAnimationFrame(sweep); }
+      if (!e[0].isIntersecting) { sweeping = false; mark.classList.remove('lit'); }
+    }).observe(mark);
   }
 
   /* ---------- Dubai clock ---------- */

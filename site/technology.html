@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500&family=IBM+Plex+Sans:wght@700&display=swap">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/styles.css?v=5">
-  <link rel="stylesheet" href="css/themes.css?v=2">
-  <link rel="stylesheet" href="css/about.css?v=4">
-  <link rel="stylesheet" href="css/technology.css?v=9">
+  <link rel="stylesheet" href="css/tokens.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/themes.css?v=5">
+  <link rel="stylesheet" href="css/about.css?v=11">
+  <link rel="stylesheet" href="css/technology.css?v=12">
 </head>
 <body>
   <header class="site-header">
@@ -26,6 +26,7 @@
       <a href="what-we-do.html">What we do</a>
       <a href="technology.html" aria-current="page">Technology</a>
       <a href="leadership.html">Leadership</a>
+      <span class="nav-ink" aria-hidden="true"></span>
     </nav>
   </header>
 
@@ -48,76 +49,53 @@
     <!-- The same modules as a list: read by screen readers, and shown under the city on phones -->
     <section class="mod-list" aria-label="Modules">
       <ol class="rows" id="rows">
-          <li class="row reveal" style="--i:0"><span class="row-n">01</span><span class="row-name">Quantitative Research Modules</span></li>
-          <li class="row reveal" style="--i:1"><span class="row-n">02</span><span class="row-name">Quantitative Research Modules</span></li>
+          <li class="row reveal" style="--i:0"><span class="row-n">01</span><span class="row-name">High-Frequency Trading Systems</span></li>
+          <li class="row reveal" style="--i:1"><span class="row-n">02</span><span class="row-name">Algorithmic Execution Models</span></li>
           <li class="row reveal" style="--i:2"><span class="row-n">03</span><span class="row-name">Quantitative Research Modules</span></li>
-          <li class="row reveal" style="--i:3"><span class="row-n">04</span><span class="row-name">Quantitative Research Modules</span></li>
-          <li class="row reveal" style="--i:4"><span class="row-n">05</span><span class="row-name">Quantitative Research Modules</span></li>
-          <li class="row reveal" style="--i:5"><span class="row-n">06</span><span class="row-name">Quantitative Research Modules</span></li>
-          <li class="row reveal" style="--i:6"><span class="row-n">07</span><span class="row-name">Quantitative Research Modules</span></li>
+          <li class="row reveal" style="--i:3"><span class="row-n">04</span><span class="row-name">Smart Order Routing</span></li>
+          <li class="row reveal" style="--i:4"><span class="row-n">05</span><span class="row-name">Real-Time Risk Monitoring</span></li>
+          <li class="row reveal" style="--i:5"><span class="row-n">06</span><span class="row-name">Market Data Analytics</span></li>
       </ol>
     </section>
   </main>
 
-  <!-- Footer: the spread closes wherever the visitor points -->
   <footer class="site-footer" aria-label="Footer">
-    <div class="spread" id="spread">
-      <canvas class="spread-lines" id="spread-lines" aria-hidden="true"></canvas>
-      <div class="spread-copy">
-        <p class="spread-hint" aria-hidden="true"><span class="hint-dot"></span><span class="hint-long">Move across the lines to close the spread</span><span class="hint-short">Tap the lines to close the spread</span></p>
-      </div>
-    </div>
-
-    <div class="foot-grid">
+    <div class="foot-top">
       <div class="foot-brand">
         <img src="assets/logo-cream.png" alt="Fortune Commodities FZCO" width="640" height="232">
         <p>Cross-venue arbitrage across foreign exchange, gold, precious metals and commodities. Licensed under DMCC since 2015.</p>
-        <address>
-          <span class="foot-k">Registered office</span>
-          Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates
-        </address>
+        <div class="social">
+          <a href="#" aria-label="Fortune Commodities on LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.06c.53-1 1.83-1.8 3.77-1.8 4 0 4.37 2.4 4.37 5.5v5.8h-4v-5.1c0-1.3 0-2.9-1.8-2.9s-2.2 1.4-2.2 2.8v5.2h-4z"/></svg>
+          </a>
+          <a href="#" aria-label="Fortune Commodities on X">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.5 4.7H5.7z"/></svg>
+          </a>
+        </div>
       </div>
 
-      <nav class="foot-nav" aria-label="Footer">
-        <span class="foot-k">Navigate</span>
-        <ul>
-          <li><a href="index.html"><i>01</i><span>Home</span></a></li>
-          <li><a href="who-we-are.html"><i>02</i><span>Who we are</span></a></li>
-          <li><a href="what-we-do.html"><i>03</i><span>What we do</span></a></li>
-          <li><a href="technology.html"><i>04</i><span>Technology</span></a></li>
-          <li><a href="leadership.html"><i>05</i><span>Leadership</span></a></li>
-          <li><a href="index.html#contact"><i>06</i><span>Contact us</span></a></li>
-        </ul>
-      </nav>
-
-      <div class="foot-touch">
-        <span class="foot-k">Get in touch</span>
-        <ul class="mail-list">
-          <li>
-            <span class="mail-k">General</span>
-            <a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a>
-            <button class="copy" type="button" data-copy="info@fortunecommodities.com" aria-label="Copy general email address">Copy</button>
-          </li>
-          <li>
-            <span class="mail-k">Careers</span>
-            <a href="mailto:careers@fortunecommodities.com">careers@fortunecommodities.com</a>
-            <button class="copy" type="button" data-copy="careers@fortunecommodities.com" aria-label="Copy careers email address">Copy</button>
-          </li>
-          <li>
-            <span class="mail-k">Phone</span>
-            <a href="tel:+91712345678934">+917 12345678934</a>
-          </li>
-        </ul>
-
-        <div class="foot-row">
-          <div class="social">
-            <a href="#" aria-label="Fortune Commodities on LinkedIn">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.06c.53-1 1.83-1.8 3.77-1.8 4 0 4.37 2.4 4.37 5.5v5.8h-4v-5.1c0-1.3 0-2.9-1.8-2.9s-2.2 1.4-2.2 2.8v5.2h-4z"/></svg>
-            </a>
-            <a href="#" aria-label="Fortune Commodities on X">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.8 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.5 4.7H5.7z"/></svg>
-            </a>
-          </div>
+      <div class="foot-cols">
+        <nav class="foot-col" aria-label="Footer">
+          <h2 class="foot-h">Company</h2>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="who-we-are.html">Who we are</a></li>
+            <li><a href="what-we-do.html">What we do</a></li>
+            <li><a href="technology.html">Technology</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="index.html#contact">Contact us</a></li>
+          </ul>
+        </nav>
+        <div class="foot-col">
+          <h2 class="foot-h">Get in touch</h2>
+          <ul class="mail-list">
+            <li><span class="mail-k">General</span><a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a><button class="copy" type="button" data-copy="info@fortunecommodities.com" aria-label="Copy general email address">Copy</button></li>
+            <li><span class="mail-k">Phone</span><a href="tel:+91712345678934">+917 12345678934</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h2 class="foot-h">Office</h2>
+          <address><a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Gold+Tower%2C+Cluster+I%2C+Jumeirah+Lake+Towers%2C+Dubai" target="_blank" rel="noopener" aria-label="Open the office address in Google Maps (opens in a new tab)">Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates</a></address>
           <div class="clock" aria-label="Local time in Dubai">
             <span class="clock-dot" aria-hidden="true"></span>
             <span>Dubai <b id="dubai-time">--:--</b> GST</span>
@@ -126,7 +104,7 @@
       </div>
     </div>
 
-    <div class="wordmark" id="wordmark" aria-hidden="true">FORTUNE</div>
+    <div class="foot-skyline" aria-hidden="true"><div class="wordmark" id="wordmark" data-text="FORTUNE">FORTUNE</div></div>
 
     <div class="foot-bar">
       <p>© 2026 Fortune Commodities FZCO. All rights reserved.</p>
@@ -139,8 +117,8 @@
     </div>
   </footer>
 
-  <script src="js/nav.js"></script>
-  <script src="js/footer.js"></script>
-  <script src="js/technology.js?v=14"></script>
+  <script src="js/nav.js?v=3"></script>
+  <script src="js/footer.js?v=6"></script>
+  <script src="js/technology.js?v=15"></script>
 </body>
 </html>

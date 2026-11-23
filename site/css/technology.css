@@ -1,7 +1,6 @@
 /* Technology: a holographic wireframe city drawn on canvas. The seven modules are small
    tags pinned to buildings at different heights. Calm: slow camera drift, small type. Warm palette. */
 
-.nav a[aria-current="page"] { color: var(--neutral-800); background: var(--neutral-200); }
 
 /* line colours for the city */
 :root { --city-edge: var(--viz-line-hi); --city-face: var(--viz-line); }
@@ -12,11 +11,11 @@
   height: max(100vh, 680px);
   background:
     radial-gradient(120% 60% at 50% 62%, color-mix(in srgb, var(--glow-amber) 16%, transparent), transparent 70%),
-    var(--black);
+    var(--page);
 }
 .city::after { /* fade the city into the page below */
   content: ""; position: absolute; inset: auto 0 0; height: 22%; z-index: 2; pointer-events: none;
-  background: linear-gradient(transparent, var(--black));
+  background: linear-gradient(transparent, var(--page));
 }
 .city-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
@@ -48,7 +47,7 @@
   cursor: default; will-change: transform;
 }
 .tag.shown { opacity: 1; }
-.tag i { font-style: normal; font-family: var(--font-condensed); font-size: 11px; letter-spacing: .12em; color: var(--bronze-300); }
+.tag i { font-style: normal; font-family: var(--font-condensed); font-size: 11px; letter-spacing: .12em; color: var(--taupe-300); }
 .tag:hover, .tag.active {
   border-color: color-mix(in srgb, var(--bronze-300) 75%, transparent);
   background: color-mix(in srgb, var(--bronze-950) 82%, transparent);
@@ -59,7 +58,7 @@
 .mod-list { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--neutral-300); }
 .row { display: flex; align-items: baseline; gap: var(--space-6); padding: 20px 0; border-bottom: 1px solid var(--neutral-300); }
-.row-n { flex: none; width: 28px; font-family: var(--font-condensed); font-size: 13px; letter-spacing: .12em; color: var(--bronze-300); }
+.row-n { flex: none; width: 28px; font-family: var(--font-condensed); font-size: 13px; letter-spacing: .12em; color: var(--taupe-300); }
 .row-name { font-family: var(--font-body); font-weight: 500; font-size: 18px; line-height: 1.4; color: var(--neutral-700); }
 
 @media (max-width: 900px) {
