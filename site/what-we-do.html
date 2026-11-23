@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500&family=IBM+Plex+Sans:wght@700&display=swap">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/styles.css?v=21">
-  <link rel="stylesheet" href="css/themes.css?v=2">
-  <link rel="stylesheet" href="css/about.css?v=4">
-  <link rel="stylesheet" href="css/what-we-do.css?v=5">
+  <link rel="stylesheet" href="css/tokens.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/themes.css?v=5">
+  <link rel="stylesheet" href="css/about.css?v=11">
+  <link rel="stylesheet" href="css/what-we-do.css?v=15">
 </head>
 <body>
   <header class="site-header">
@@ -26,13 +26,24 @@
       <a href="what-we-do.html" aria-current="page">What we do</a>
       <a href="technology.html">Technology</a>
       <a href="leadership.html">Leadership</a>
+      <span class="nav-ink" aria-hidden="true"></span>
     </nav>
   </header>
 
   <main class="wwd">
-    <!-- 1. Hero, the same treatment as Who we are: the title where converging lines meet -->
+    <!-- 1. Hero: the title over a field of question marks -->
     <section class="page-hero">
-      <canvas class="hero-lines" id="hero-lines" aria-hidden="true"></canvas>
+      <div class="qm-field" aria-hidden="true">
+        <span class="qm-big">?</span>
+        <span class="qm q5">?</span><span class="qm q6">?</span>
+      </div>
+      <!-- the four desks, set quietly along the bottom of the hero -->
+      <ul class="hint-row" aria-label="Trading areas">
+        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M4 10c10 2 16 8 20 14M4 38c10-2 16-8 20-14M24 24h20" /><path d="M24 20.5l3.5 3.5-3.5 3.5-3.5-3.5z" class="fill"/></svg><span>Arbitrage Trading</span></li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M10 17h26m-5-5 5 5-5 5M38 31H12m5-5-5 5 5 5"/><text x="24" y="10.5">$</text><text x="24" y="44">€</text></svg><span>Foreign Exchange Trading</span></li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48"><circle cx="15" cy="33" r="7"/><circle cx="33" cy="33" r="7"/><circle cx="24" cy="18" r="7"/><circle cx="15" cy="33" r="2.5"/><circle cx="33" cy="33" r="2.5"/><circle cx="24" cy="18" r="2.5"/><path d="M5 41h38"/></svg><span>Commodity Trading</span></li>
+        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M8 38h14l-2-7H10zM26 38h14l-2-7H28zM17 29h14l-2-7H19z"/><path d="M10 31l2-1.5h6M28 31l2-1.5h6M19 22l2-1.5h6" opacity=".6"/></svg><span>Gold Trading</span></li>
+      </ul>
       <div class="page-hero-glow" aria-hidden="true"><span></span><span></span></div>
       <div class="page-hero-inner">
         <h1 class="page-title rise">What we do</h1>
@@ -165,13 +176,12 @@
           <h2 class="foot-h">Get in touch</h2>
           <ul class="mail-list">
             <li><span class="mail-k">General</span><a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a><button class="copy" type="button" data-copy="info@fortunecommodities.com" aria-label="Copy general email address">Copy</button></li>
-            <li><span class="mail-k">Careers</span><a href="mailto:careers@fortunecommodities.com">careers@fortunecommodities.com</a><button class="copy" type="button" data-copy="careers@fortunecommodities.com" aria-label="Copy careers email address">Copy</button></li>
             <li><span class="mail-k">Phone</span><a href="tel:+91712345678934">+917 12345678934</a></li>
           </ul>
         </div>
         <div class="foot-col">
           <h2 class="foot-h">Office</h2>
-          <address>Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates</address>
+          <address><a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Gold+Tower%2C+Cluster+I%2C+Jumeirah+Lake+Towers%2C+Dubai" target="_blank" rel="noopener" aria-label="Open the office address in Google Maps (opens in a new tab)">Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates</a></address>
           <div class="clock" aria-label="Local time in Dubai">
             <span class="clock-dot" aria-hidden="true"></span>
             <span>Dubai <b id="dubai-time">--:--</b> GST</span>
@@ -193,9 +203,9 @@
     </div>
   </footer>
 
-  <script src="js/nav.js"></script>
-  <script src="js/footer.js?v=3"></script>
-  <script src="js/about.js"></script>
+  <script src="js/nav.js?v=3"></script>
+  <script src="js/footer.js?v=6"></script>
+  <script src="js/about.js?v=5"></script>
   <script src="js/what-we-do.js?v=5"></script>
 </body>
 </html>

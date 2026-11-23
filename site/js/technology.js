@@ -38,7 +38,7 @@
 
   // the modules sit on these buildings, spread across the skyline at different heights
   var LANDMARKS = [
-    [-50, 40, 5.5, 26], [-28, 66, 6, 44], [-14, 20, 5, 12], [24, 78, 6, 58], [16, 26, 5.5, 22], [40, 56, 6, 36], [54, 22, 5, 14]
+    [-50, 40, 5.5, 26], [-28, 66, 6, 44], [-14, 20, 5, 12], [24, 78, 6, 58], [16, 26, 5.5, 22], [40, 56, 6, 36]
   ];
   var buildings = [];
   LANDMARKS.forEach(function (L, i) {

@@ -1,19 +1,18 @@
 /* Leadership: a road of puzzle pieces drawn in line, winding into the distance.
    The two leaders stand on the loose pieces at the front. Warm palette. */
 
-.nav a[aria-current="page"] { color: var(--neutral-800); background: var(--neutral-200); }
 
 .road {
   position: relative; isolation: isolate; overflow: hidden;
   height: max(100vh, 860px);
-  /* a warm espresso band, lighter than the black around it, like the other pages' feature sections */
+  /* a deep umber band, lighter than the black around it, like the other pages' feature sections */
   background:
-    radial-gradient(70% 55% at 50% 40%, color-mix(in srgb, var(--bronze) 16%, transparent), transparent 70%),
-    linear-gradient(180deg, #1c150e 0%, #2a1f15 50%, #1a130d 100%);
+    radial-gradient(70% 55% at 50% 40%, color-mix(in srgb, var(--taupe-500) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, #1f1814 0%, #28201b 50%, #1c1714 100%);
 }
 .road::after {
   content: ""; position: absolute; inset: auto 0 0; height: 16%; z-index: 1; pointer-events: none;
-  background: linear-gradient(transparent, var(--black));
+  background: linear-gradient(transparent, var(--page));
 }
 .road-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .6; transition: opacity 1.4s var(--ease-out), filter 1.4s var(--ease-out); }
 .road.focus .road-canvas { opacity: .22; filter: blur(1px); }   /* once the leaders arrive the road becomes a backdrop */
@@ -22,15 +21,15 @@
 .road::before {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background:
-    radial-gradient(42% 46% at 50% 62%, color-mix(in srgb, #c49a6c 22%, transparent), transparent 72%),
+    radial-gradient(42% 46% at 50% 62%, color-mix(in srgb, #c49a6c 14%, transparent), transparent 72%),
     radial-gradient(85% 80% at 50% 58%, transparent 50%, rgba(0, 0, 0, .55));
   opacity: 0; transition: opacity 1.4s var(--ease-out);
 }
 .road.focus::before { opacity: 1; }
 
 /* ---------- hero: layered shapes from the logo's F converge beneath the title ---------- */
-.lead-hero { min-height: 100vh; min-height: 100svh; background: radial-gradient(80% 70% at 50% 85%, #1d140d, var(--black) 70%); }   /* fills the first view */
-.lead-hero::after { background: linear-gradient(transparent, #1c150e); }   /* melt into the leaders band, no seam */
+.lead-hero { min-height: 100vh; min-height: 100svh; background: radial-gradient(80% 70% at 50% 85%, #241b16, var(--page) 70%); }   /* fills the first view */
+.lead-hero::after { background: linear-gradient(transparent, #1f1814); }   /* melt into the leaders band, no seam */
 .lead-shapes { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 .lead-shapes .ls-solid { opacity: .6; }
 .lead-shapes .ls-lines { opacity: .4; }
@@ -58,7 +57,7 @@
 .leader.shown { opacity: 1; transform: none; }
 
 .leader-stage {
-  position: relative; width: 100%; height: 330px; flex: none; overflow: hidden; isolation: isolate;
+  position: relative; width: 100%; height: 270px; flex: none; overflow: hidden; isolation: isolate;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
           mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
 }
@@ -67,7 +66,7 @@
   border-radius: 34px 34px 0 0;
 }
 .leader-frame {
-  width: 230px; height: 240px; z-index: -1;
+  width: 200px; height: 200px; z-index: -1;
   background:
     radial-gradient(90% 70% at 50% 30%, color-mix(in srgb, #c9a27a 55%, transparent), transparent 75%),
     linear-gradient(180deg, #7a5a3e, #3a2a1d 70%, #241a12);
@@ -77,13 +76,13 @@
 .leader-rings { position: absolute; inset: 0; z-index: -2;
   -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 75%); mask-image: linear-gradient(180deg, #000 30%, transparent 75%); }
 .leader-rings i { border: 1px solid color-mix(in srgb, var(--bronze-300) 45%, transparent); }
-.leader-rings i:nth-child(1) { width: 252px; height: 262px; border-radius: 40px 40px 0 0; }
-.leader-rings i:nth-child(2) { width: 274px; height: 284px; border-radius: 46px 46px 0 0; opacity: .65; }
-.leader-rings i:nth-child(3) { width: 296px; height: 306px; border-radius: 52px 52px 0 0; opacity: .35; }
+.leader-rings i:nth-child(1) { width: 220px; height: 220px; border-radius: 40px 40px 0 0; }
+.leader-rings i:nth-child(2) { width: 240px; height: 240px; border-radius: 46px 46px 0 0; opacity: .65; }
+.leader-rings i:nth-child(3) { width: 260px; height: 260px; border-radius: 52px 52px 0 0; opacity: .35; }
 
 .leader-stage img {
   position: absolute; left: 50%; bottom: 0; translate: -50% 0;
-  height: 290px; width: auto; max-width: none;
+  height: 228px; width: auto; max-width: none;
   filter: saturate(.88) contrast(1.05) brightness(1.04) drop-shadow(0 18px 30px rgba(0, 0, 0, .45));
   transition: transform .8s var(--ease-out);
   transform-origin: 50% 100%;
@@ -113,11 +112,11 @@
   .leaders { flex-direction: column; align-items: center; justify-content: center; gap: clamp(28px, 5vh, 56px); padding: var(--space-16) 0 var(--space-12); }
   .leader {
     width: min(780px, 92vw); height: auto;
-    display: grid; grid-template-columns: 300px 1fr; grid-template-rows: auto auto; column-gap: var(--space-10, 40px);
+    display: grid; grid-template-columns: 270px 1fr; grid-template-rows: auto auto; column-gap: var(--space-10, 40px);
     align-items: center; text-align: left;
     transform: translateX(-36px);
   }
-  .leader .leader-stage { grid-row: 1 / 3; grid-column: 1; width: 300px; height: 300px; }
+  .leader .leader-stage { grid-row: 1 / 3; grid-column: 1; width: 270px; height: 260px; }
   .leader .leader-id { grid-column: 2; align-self: end; margin: 0; padding: 0; }
   .leader .leader-bio { grid-column: 2; align-self: start; max-width: 420px; }
   .leader .leader-id::after {   /* a short bronze rule under the role */
@@ -125,7 +124,7 @@
     background: linear-gradient(90deg, var(--bronze-300), transparent);
   }
   /* the second panel mirrors the first */
-  .leader:nth-child(2) { grid-template-columns: 1fr 300px; text-align: right; transform: translateX(36px); }
+  .leader:nth-child(2) { grid-template-columns: 1fr 270px; text-align: right; transform: translateX(36px); }
   .leader:nth-child(2) .leader-stage { grid-column: 2; }
   .leader:nth-child(2) .leader-id, .leader:nth-child(2) .leader-bio { grid-column: 1; justify-self: end; }
   .leader:nth-child(2) .leader-id::after { margin-left: auto; background: linear-gradient(270deg, var(--bronze-300), transparent); }
@@ -142,12 +141,12 @@
     padding: 0 var(--space-6); margin-top: calc(-1 * var(--space-24));
   }
   .leader { position: relative; width: auto; height: auto; transform: none !important; opacity: 1; }
-  .leader-stage { height: 300px; }
-  .leader-stage img { height: 260px; }
-  .leader-frame { width: 66%; height: 215px; }
-  .leader-rings i:nth-child(1) { width: 73%; height: 235px; }
-  .leader-rings i:nth-child(2) { width: 80%; height: 255px; }
-  .leader-rings i:nth-child(3) { width: 87%; height: 275px; }
+  .leader-stage { height: 250px; }
+  .leader-stage img { height: 210px; }
+  .leader-frame { width: 64%; height: 180px; }
+  .leader-rings i:nth-child(1) { width: 71%; height: 198px; }
+  .leader-rings i:nth-child(2) { width: 78%; height: 216px; }
+  .leader-rings i:nth-child(3) { width: 85%; height: 234px; }
   .leader-name { font-size: 20px; }
 }
 @media (max-width: 480px) {

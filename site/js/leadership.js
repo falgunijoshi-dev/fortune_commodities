@@ -18,7 +18,7 @@
   var cards = Array.prototype.slice.call(document.querySelectorAll('.leader'));
   if (!section || !canvas) return;
   var ctx = canvas.getContext('2d');
-  var COL = { edge: rgb(tok('--bronze-300')), border: rgb(tok('--cream')), glow: rgb(tok('--glow-champagne')), dim: rgb(tok('--neutral-500')) };
+  var COL = { edge: rgb(tok('--taupe-200')), border: rgb(tok('--cream')), glow: rgb(tok('--glow-champagne')), dim: rgb(tok('--neutral-500')) };
 
   /* ---------- road geometry, in road coordinates (a = across in world units, v = along) ---------- */
   var RW = 22, COLS = 3, CW = RW / COLS, L = CW, ROWS = 56, VMAX = ROWS * L, T = 1.1;

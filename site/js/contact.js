@@ -1,87 +1,39 @@
-/* Contact section: tabs, chips, validation, a front-end-only "sent" state,
+/* Contact section: form validation, a front-end-only "sent" state,
    and the striped-ribbon backdrop. Nothing is submitted anywhere yet. */
 (function () {
   'use strict';
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- tabs ---------- */
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('.contact .tab'));
-  var ink = document.querySelector('.contact .tab-ink');
-  var sent = document.getElementById('sent');
-
-  function placeInk() {
-    var on = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0];
-    if (!on || !ink) return;
-    ink.style.width = on.offsetWidth + 'px';
-    ink.style.transform = 'translateX(' + on.offsetLeft + 'px)';
-  }
-  function select(tab, focus) {
-    tabs.forEach(function (t) {
-      var on = t === tab;
-      t.setAttribute('aria-selected', on ? 'true' : 'false');
-      t.tabIndex = on ? 0 : -1;
-      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-    });
-    sent.hidden = true;
-    if (focus) tab.focus();
-    placeInk();
-  }
-  tabs.forEach(function (t, i) {
-    t.addEventListener('click', function () { select(t); });
-    t.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        select(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length], true);
-      }
-    });
-  });
-  window.addEventListener('resize', placeInk);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeInk);
-  placeInk();
-
-  /* ---------- file name ---------- */
-  var cv = document.getElementById('c-cv');
-  if (cv) cv.addEventListener('change', function () {
-    var f = cv.files && cv.files[0], wrap = cv.closest('.field');
-    wrap.querySelector('.file-name').textContent = f ? f.name : 'PDF or Word, up to 5 MB';
-    wrap.classList.toggle('has-file', !!f);
-    if (f) wrap.classList.remove('invalid');
-  });
-
   /* ---------- validation + sent state ---------- */
+  var form = document.getElementById('form-contact');
+  var sent = document.getElementById('sent'), title = document.getElementById('form-title');
   function check(el) {
     var ok = el.checkValidity();
-    if (el.type === 'file' && el.files && el.files[0] && el.files[0].size > 5 * 1024 * 1024) ok = false;
+    var min = +el.getAttribute('minlength') || 0;
+    if (min && el.value.trim().length < min) ok = false;   // minlength alone isn't checked for every input path
     el.closest('.field').classList.toggle('invalid', !ok);
     return ok;
   }
-  Array.prototype.forEach.call(document.querySelectorAll('.enquiry'), function (form) {
-    form.addEventListener('blur', function (e) {
-      if (e.target.matches('.field input, .field textarea') && e.target.closest('.field').classList.contains('invalid')) check(e.target);
-    }, true);
+  if (form) {
     form.addEventListener('input', function (e) {
-      if (e.target.closest('.field') && e.target.closest('.field').classList.contains('invalid')) check(e.target);
+      var f = e.target.closest('.field');
+      if (f && f.classList.contains('invalid')) check(e.target);
     });
+    form.addEventListener('blur', function (e) {
+      if (e.target.matches('input, textarea') && e.target.value) check(e.target);
+    }, true);
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var fields = form.querySelectorAll('.field input, .field textarea'), first = null;
-      Array.prototype.forEach.call(fields, function (el) { if (!check(el) && !first) first = el; });
+      var first = null;
+      Array.prototype.forEach.call(form.querySelectorAll('input, textarea'), function (el) { if (!check(el) && !first) first = el; });
       if (first) { first.focus(); return; }
-      var careers = form.id === 'form-careers';
-      document.getElementById('sent-text').textContent = careers
-        ? 'Our team reviews every application and will be in touch if there is a fit.'
-        : 'The right person on our team will reply to you directly.';
-      form.hidden = true; sent.hidden = false; sent.focus();
+      form.hidden = title.hidden = true; sent.hidden = false; sent.focus();   // front end only: nothing is sent anywhere yet
       form.reset();
-      Array.prototype.forEach.call(form.querySelectorAll('.file-field'), function (w) {
-        w.classList.remove('has-file'); w.querySelector('.file-name').textContent = 'PDF or Word, up to 5 MB';
-      });
     });
-  });
-  document.getElementById('sent-again').addEventListener('click', function () {
-    var on = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0];
-    select(on, true);
-  });
+    document.getElementById('sent-again').addEventListener('click', function () {
+      sent.hidden = true; form.hidden = title.hidden = false; form.querySelector('input').focus();
+    });
+  }
 
   /* ---------- striped ribbon backdrop ---------- */
   // A flat band of parallel stripes folded into a Z, poster-style: a light band runs in from the left,
@@ -100,7 +52,7 @@
   var S0 = [44, 352], S1 = [196, 492];      // second fold (bottom left): where the bottom band's stripes start
   var TOP_DIR = [1, -0.035], BOT_DIR = [1, -0.2];
 
-  var CREAM = [236, 222, 208], BRONZE = [190, 140, 100];
+  var CREAM = [207, 192, 179], BRONZE = [190, 140, 100];   // light bands in pale taupe, the fold in bronze
 
   function unit(v) { var l = Math.hypot(v[0], v[1]) || 1; return [v[0] / l, v[1] / l]; }
   // a stripe from P to Q, its ends cut along the given edge directions

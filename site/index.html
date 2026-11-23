@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500&family=IBM+Plex+Sans:wght@700&display=swap">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/styles.css?v=21">
-  <link rel="stylesheet" href="css/themes.css?v=2">
+  <link rel="stylesheet" href="css/tokens.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/themes.css?v=5">
 </head>
 <body>
   <header class="site-header">
@@ -24,6 +24,7 @@
       <a href="what-we-do.html">What we do</a>
       <a href="technology.html">Technology</a>
       <a href="leadership.html">Leadership</a>
+      <span class="nav-ink" aria-hidden="true"></span>
     </nav>
   </header>
 
@@ -160,65 +161,29 @@
         </div>
 
         <div class="panel reveal" style="--d:.12s">
-          <div class="tabs" role="tablist" aria-label="Type of enquiry">
-            <button class="tab" role="tab" id="tab-business" aria-controls="form-business" aria-selected="true">Business enquiries</button>
-            <button class="tab" role="tab" id="tab-careers" aria-controls="form-careers" aria-selected="false" tabindex="-1">Careers</button>
-            <span class="tab-ink" aria-hidden="true"></span>
-          </div>
-
-          <!-- Business -->
-          <form class="enquiry" id="form-business" role="tabpanel" aria-labelledby="tab-business" novalidate>
-            <fieldset class="chips">
-              <legend>I'm enquiring about</legend>
-              <label class="chip"><input type="radio" name="topic" value="Counterparty relationship" checked><span>Counterparty relationship</span></label>
-              <label class="chip"><input type="radio" name="topic" value="FX and commodities"><span>FX &amp; commodities</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Gold and precious metals"><span>Gold &amp; precious metals</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Partnership"><span>Partnership</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Compliance"><span>Compliance</span></label>
-              <label class="chip"><input type="radio" name="topic" value="Other"><span>Other</span></label>
-            </fieldset>
-
-            <div class="fields">
-              <div class="field"><input id="b-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="b-name">Your name</label><span class="err">Please add your name.</span></div>
-              <div class="field"><input id="b-company" name="company" type="text" autocomplete="organization" placeholder=" " required><label for="b-company">Company</label><span class="err">Please add your company.</span></div>
-              <div class="field"><input id="b-email" name="email" type="email" autocomplete="email" placeholder=" " required><label for="b-email">Work email</label><span class="err">Please add a valid email address.</span></div>
-              <div class="field"><input id="b-phone" name="phone" type="tel" autocomplete="tel" placeholder=" "><label for="b-phone">Phone <em>(optional)</em></label></div>
-              <div class="field field-wide"><textarea id="b-message" name="message" rows="3" placeholder=" " required></textarea><label for="b-message">How can we help?</label><span class="err">Please add a short message.</span></div>
+          <h3 class="form-title" id="form-title">Send us a Message</h3>
+          <form class="enquiry" id="form-contact" aria-labelledby="form-title" novalidate>
+            <div class="field">
+              <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Your Name" required>
+              <span class="err">Please add your name.</span>
             </div>
-
-            <div class="form-foot">
-              <p class="fine">We use these details only to reply to you.</p>
-              <button class="btn btn-primary btn-submit" type="submit">Send enquiry <span class="arrow" aria-hidden="true">→</span></button>
+            <div class="field">
+              <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-email" name="email" type="email" autocomplete="email" placeholder="your.email@example.com" required>
+              <span class="err">Please add a valid email address.</span>
             </div>
-          </form>
-
-          <!-- Careers -->
-          <form class="enquiry" id="form-careers" role="tabpanel" aria-labelledby="tab-careers" novalidate hidden>
-            <fieldset class="chips">
-              <legend>I'm interested in</legend>
-              <label class="chip"><input type="radio" name="area" value="Trading" checked><span>Trading</span></label>
-              <label class="chip"><input type="radio" name="area" value="Quantitative research"><span>Quantitative research</span></label>
-              <label class="chip"><input type="radio" name="area" value="Technology"><span>Technology</span></label>
-              <label class="chip"><input type="radio" name="area" value="Risk and compliance"><span>Risk &amp; compliance</span></label>
-              <label class="chip"><input type="radio" name="area" value="Operations"><span>Operations</span></label>
-            </fieldset>
-
-            <div class="fields">
-              <div class="field"><input id="c-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="c-name">Your name</label><span class="err">Please add your name.</span></div>
-              <div class="field"><input id="c-email" name="email" type="email" autocomplete="email" placeholder=" " required><label for="c-email">Email</label><span class="err">Please add a valid email address.</span></div>
-              <div class="field field-wide"><input id="c-link" name="link" type="url" placeholder=" "><label for="c-link">LinkedIn or portfolio <em>(optional)</em></label></div>
-              <div class="field field-wide file-field">
-                <input id="c-cv" name="cv" type="file" accept=".pdf,.doc,.docx" required>
-                <label for="c-cv"><span class="file-btn">Attach CV</span><span class="file-name">PDF or Word, up to 5 MB</span></label>
-                <span class="err">Please attach your CV.</span>
-              </div>
-              <div class="field field-wide"><textarea id="c-message" name="message" rows="3" placeholder=" "></textarea><label for="c-message">Anything you'd like us to know <em>(optional)</em></label></div>
+            <div class="field">
+              <label for="f-phone">Phone <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="+91 98765 43210" pattern="\+?[0-9 ]{7,}" required>
+              <span class="err">Please add a valid phone number.</span>
             </div>
-
-            <div class="form-foot">
-              <p class="fine">We keep applications on file for 12 months.</p>
-              <button class="btn btn-primary btn-submit" type="submit">Send application <span class="arrow" aria-hidden="true">→</span></button>
+            <div class="field">
+              <label for="f-message">Message <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-message" name="message" rows="6" minlength="10" placeholder="Tell us about your inquiry... (minimum 10 characters)" required></textarea>
+              <span class="err">Please write at least 10 characters.</span>
             </div>
+            <button class="btn btn-primary btn-submit" type="submit">Send Message</button>
           </form>
 
           <div class="sent" id="sent" hidden tabindex="-1">
@@ -263,13 +228,12 @@
           <h2 class="foot-h">Get in touch</h2>
           <ul class="mail-list">
             <li><span class="mail-k">General</span><a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a><button class="copy" type="button" data-copy="info@fortunecommodities.com" aria-label="Copy general email address">Copy</button></li>
-            <li><span class="mail-k">Careers</span><a href="mailto:careers@fortunecommodities.com">careers@fortunecommodities.com</a><button class="copy" type="button" data-copy="careers@fortunecommodities.com" aria-label="Copy careers email address">Copy</button></li>
             <li><span class="mail-k">Phone</span><a href="tel:+91712345678934">+917 12345678934</a></li>
           </ul>
         </div>
         <div class="foot-col">
           <h2 class="foot-h">Office</h2>
-          <address>Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates</address>
+          <address><a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Gold+Tower%2C+Cluster+I%2C+Jumeirah+Lake+Towers%2C+Dubai" target="_blank" rel="noopener" aria-label="Open the office address in Google Maps (opens in a new tab)">Unit No. 05GH, Cluster I, Gold Tower<br>Jumeirah Lake Towers<br>Dubai, United Arab Emirates</a></address>
           <div class="clock" aria-label="Local time in Dubai">
             <span class="clock-dot" aria-hidden="true"></span>
             <span>Dubai <b id="dubai-time">--:--</b> GST</span>
@@ -293,9 +257,9 @@
 
   <script src="js/land-mask.js"></script>
   <script src="js/globe.js?v=7"></script>
-  <script src="js/contact.js?v=11"></script>
-  <script src="js/nav.js"></script>
+  <script src="js/contact.js?v=15"></script>
+  <script src="js/nav.js?v=3"></script>
   <script src="js/reveal.js"></script>
-  <script src="js/footer.js?v=3"></script>
+  <script src="js/footer.js?v=6"></script>
 </body>
 </html>
