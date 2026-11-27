@@ -12,6 +12,52 @@
     bronze: rgb(tok('--bronze-300')), ice: rgb(tok('--viz-line-hi')), line: rgb(tok('--viz-line')), text: rgb(tok('--neutral-500'))
   };
 
+  /* ---------- real data + illustrative fallback ---------- */
+  var LIVE = false;
+  var badgeEl = document.getElementById('chart-badge');
+
+  // Fetch real daily rates from Frankfurter.app (free, no API key, CORS-safe).
+  // Returns [{t: date, c: close}] or throws.
+  function fetchReal(from, to, days) {
+    var end = new Date().toISOString().slice(0, 10);
+    var start = new Date(Date.now() - days * 86400000).toISOString().slice(0, 10);
+    return fetch('https://api.frankfurter.dev/v1/' + start + '..' + end + '?from=' + from + '&to=' + to, { mode: 'cors' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (j) {
+        var rates = j.rates || {};
+        return Object.entries(rates).map(function (d) { return { t: d[0], c: d[1][to] }; }).sort(function (a, b) { return a.t < b.t ? -1 : 1; });
+      });
+  }
+
+  // Convert a close-only series into the OHLC shape the renderer already expects.
+  function buildOHLC(closes) {
+    return closes.map(function (p, i, arr) {
+      var c = p.c;
+      var o = i > 0 ? arr[i - 1].c : c;
+      var h = Math.max(o, c) * (1 + 0.004);
+      var l = Math.min(o, c) * (1 - 0.004);
+      return { o: o, h: h, l: l, c: c, v: 0.5, b: c * (1 + 0.006), s: (c - o) / o * 2 };
+    });
+  }
+
+  async function fetchSeries(area, tf) {
+    var s = SPEC[area];
+    var n = TF[tf];
+    try {
+      var closes = await fetchReal('USD', 'EUR', n);   // real EUR/USD rates
+      if (closes.length >= 2) {
+        LIVE = true;
+        if (badgeEl) badgeEl.textContent = 'Live data · EUR/USD';
+        return buildOHLC(closes);
+      }
+    } catch (e) {
+      console.warn('real data unavailable, using illustrative:', e);
+    }
+    LIVE = false;
+    if (badgeEl) badgeEl.textContent = 'Illustrative data';
+    return series(area, tf);   // existing PRNG fallback
+  }
+
   /* header */
   var header = document.querySelector('.site-header');
   function onScroll() { header.classList.toggle('scrolled', window.scrollY > 24); }
@@ -159,8 +205,8 @@
     })(t0);
     setTimeout(function () { state.prog = 1; draw(); }, 900); // safety if frames are throttled
   }
-  function load() {
-    state.data = series(state.area, state.tf);
+  async function load() {
+    state.data = await fetchSeries(state.area, state.tf);
     nameEl.textContent = SPEC[state.area].name;
     setLegend(SPEC[state.area].kind);
     animateIn();
@@ -198,7 +244,7 @@
 
   window.__chartDone = function () { state.prog = 1; draw(); };   // review helper
   new ResizeObserver(size).observe(canvas);
-  state.data = series(state.area, state.tf); setLegend('spread'); size();
+  load().then(function () { size(); });
   // draw the chart in when it first scrolls into view
   new IntersectionObserver(function (en, obs) { if (en[0].isIntersecting) { animateIn(); obs.disconnect(); } }, { threshold: 0.3 }).observe(canvas);
 
