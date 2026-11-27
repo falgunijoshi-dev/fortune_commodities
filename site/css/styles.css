@@ -52,6 +52,7 @@ a { color: inherit; text-decoration: none; }
   transition: color .25s var(--ease-out);
 }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--neutral-800); }
+.nav-foot { display: none; }
 .nav-ink {   /* placed by nav.js */
   position: absolute; left: 0; bottom: 2px; height: 1px; width: 0; pointer-events: none; opacity: 0;
   background: linear-gradient(90deg, transparent, var(--bronze-300) 25%, var(--bronze-200) 50%, var(--bronze-300) 75%, transparent);
@@ -250,59 +251,98 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Small screens ---------- */
 @media (max-width: 860px) {
-  .site-header { padding: 14px max(var(--space-4), env(safe-area-inset-left, 0px)); }
-  .site-header.scrolled { padding: 20px 26px; }
-  .site-header.scrolled::before { inset: 6px 8px; }
+  .site-header { padding: 26px max(var(--space-4), env(safe-area-inset-left, 0px)) 14px; }   /* more air above the logo */
+  .site-header.scrolled { padding: 28px 26px 22px; }
+  .site-header.scrolled::before { inset: 12px 8px 6px; }
   .brand { position: relative; z-index: 2; }
-  .nav-toggle { display: inline-flex; }
-  /* phones: a full-screen menu, links stacked large, sliding up one by one */
+  .nav-toggle { display: inline-flex; background: none; border: 0; padding: 12px 8px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  /* icon only on phones, so the three lines are a touch larger */
+  .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after { width: 20px; }
+  .nav-toggle span::before { top: -6px; } .nav-toggle span::after { top: 6px; }
+  .nav-toggle[aria-expanded="true"] span::before { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span::after { transform: translateY(-6px) rotate(-45deg); }
+  /* phones: a quiet full-screen menu. Links in the same condensed face as the desktop nav, a size up,
+     each on a hairline with a small arrow; the current page carries a bronze tick. Office line at the foot. */
   .nav {
     position: fixed; inset: 0; z-index: 1;
-    flex-direction: column; align-items: stretch; justify-content: center; gap: 0;
-    padding: 96px var(--space-6) var(--space-12);
+    flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0;
+    padding: 132px var(--space-6) calc(var(--space-8) + env(safe-area-inset-bottom, 0px));
     background:
-      radial-gradient(80% 50% at 50% 100%, color-mix(in srgb, var(--bronze) 18%, transparent), transparent 70%),
+      radial-gradient(90% 40% at 100% 0%, color-mix(in srgb, var(--umber-700) 45%, transparent), transparent 70%),
+      radial-gradient(80% 45% at 50% 105%, color-mix(in srgb, var(--bronze) 14%, transparent), transparent 70%),
       color-mix(in srgb, var(--page) 97%, transparent);
     backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
     opacity: 0; visibility: hidden;
     transition: opacity .35s var(--ease-out), visibility 0s .35s;
   }
+  .nav::before {   /* small label above the links */
+    content: "Menu"; display: block; margin-bottom: var(--space-4);
+    font: 500 11px/1 var(--font-condensed); letter-spacing: .22em; text-transform: uppercase; color: var(--taupe-400);
+  }
   .nav.open { opacity: 1; visibility: visible; transition-delay: 0s; }
-  .nav a {
-    font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: .01em; color: var(--neutral-800);
-    gap: var(--space-4); padding: 18px 0; border-bottom: 1px solid var(--neutral-300);
-    opacity: 0; transform: translateY(14px);
+  .nav > a {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    font-family: var(--font-condensed); font-weight: 500; font-size: 19px; letter-spacing: .05em; color: var(--neutral-700);
+    padding: 17px 0; border-top: 1px solid color-mix(in srgb, var(--taupe-700) 55%, transparent);
+    opacity: 0; transform: translateY(10px);
     transition: opacity .45s var(--ease-out), transform .45s var(--ease-out), color .25s;
   }
-    .nav.open a { opacity: 1; transform: none; }
-  .nav.open a:nth-child(2) { transition-delay: .05s; } .nav.open a:nth-child(3) { transition-delay: .1s; }
-  .nav.open a:nth-child(4) { transition-delay: .15s; }
-  .nav a[aria-current="page"] { color: var(--bronze-200); }
+  .nav > a:nth-of-type(4) { border-bottom: 1px solid color-mix(in srgb, var(--taupe-700) 55%, transparent); }
+  .nav > a::after {   /* arrow */
+    content: "→"; font-size: 16px; color: var(--taupe-500);
+    transition: transform .25s var(--ease-out), color .25s;
+  }
+  .nav > a:active::after, .nav > a:hover::after { transform: translateX(4px); color: var(--bronze-200); }
+  .nav > a[aria-current="page"] { color: var(--neutral-800); }
+  .nav > a[aria-current="page"]::before {   /* bronze tick for the page you're on */
+    content: ""; position: absolute; left: 0; top: -1px; width: 28px; height: 1px;
+    background: var(--bronze-300); box-shadow: 0 0 10px color-mix(in srgb, var(--bronze-300) 70%, transparent);
+  }
+  .nav > a[aria-current="page"]::after { color: var(--bronze-200); }
+  .nav.open > a { opacity: 1; transform: none; }
+  .nav.open > a:nth-of-type(2) { transition-delay: .05s; } .nav.open > a:nth-of-type(3) { transition-delay: .1s; }
+  .nav.open > a:nth-of-type(4) { transition-delay: .15s; }
+  .nav-foot {
+    display: block; margin-top: auto;
+    font-size: 13px; line-height: 1.7; color: var(--taupe-400);
+    opacity: 0; transition: opacity .5s var(--ease-out) .2s;
+  }
+  .nav.open .nav-foot { opacity: 1; }
+  .nav-foot a { color: var(--neutral-700); }
   .nav-ink { display: none; }
   body.menu-open { overflow: hidden; }
   .brand img { width: 104px; }
   .site-header.scrolled .brand img { width: 92px; }
   /* hero type on phones: a clear step down from headline to label to body, so the small line above reads as a label */
   .hero .eyebrow { font-size: 11px; line-height: 14px; letter-spacing: .14em; margin-bottom: var(--space-4); }
-  .hero-title { font-size: 40px; line-height: 1.06; }
+  .hero-title { font-size: min(40px, 10.1vw); line-height: 1.06; }
+  .hero-title .nw, .hero-title .hl { white-space: nowrap; }   /* "Proven expertise." and "Trusted execution." each stay on one line */
   .hero-lead { font-size: 16px; line-height: 1.6; }
   /* the two hero buttons always share one width: side by side when they fit, stacked when they don't */
   .hero-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); max-width: 340px; margin-inline: auto; gap: var(--space-3); }
   .hero-actions .btn { justify-content: center; width: 100%; padding-inline: var(--space-4); white-space: nowrap; }
-  .dome-wrap, .bowl-stage { width: 150vw; }
+  /* the whole globe fits the screen width; the pillars sit just under the wire half instead of on it */
+  .dome-wrap, .bowl-stage { width: 120vw; }   /* the sphere itself fills ~96% of the screen; only its glow runs past the edges */
+  /* phones: like desktop, the five pillars sit on the wire half of the globe, three above and two below,
+     each fading up as it scrolls into view (the .reveal stagger) */
   .pillars {
-    inset: 5% auto auto 50%; transform: translateX(-50%);
-    width: min(100vw - 32px, 420px);
-    display: grid; grid-template-columns: repeat(6, 1fr); row-gap: var(--space-4);
+    inset: 3% auto auto 50%; transform: translateX(-50%);
+    width: min(100vw - 72px, 300px);   /* a compact block held in the middle of the sphere, clear of its edges */
+    display: grid; grid-template-columns: repeat(6, 1fr); row-gap: 10px;
   }
-  .pillars li { position: static; translate: none; width: auto; grid-column: span 2; }
+  .pillars li { position: static; translate: none; width: auto; grid-column: span 2; gap: 1px; }
   .pillars li:nth-child(4) { grid-column: 2 / span 2; }
   .pillars li:nth-child(5) { grid-column: 4 / span 2; }
-  .pillar-icon { width: 40px; height: 40px; margin-bottom: 4px; }
-  .pillar-k { font-size: 10px; line-height: 13px; letter-spacing: .05em; }
-  .pillar-v { font-size: 17px; }
+  .pillar-icon { width: 28px; height: 28px; margin-bottom: 3px; }
+  .pillar-k { font-size: 8px; line-height: 11px; letter-spacing: .05em; white-space: nowrap; }
+  .pillar-v { font-size: 14px; }
   .between-copy { margin-top: var(--space-8); }
-  .flow-markets li { font-size: 14px; }
+  .statement { font-size: 21px; line-height: 1.35; }
+  .statement-sub { font-size: 16px; line-height: 26px; margin-top: var(--space-4); }
+  /* phones: all four terms carry the same weight. Same face, size, colour and node; the desk node sits where the lines meet */
+  .flow-markets li { font-size: 15px; line-height: 20px; padding-inline: 6px; text-align: center; text-wrap: balance; }
+  .flow-desk { flex-direction: column; margin-top: 0; font-size: 15px; line-height: 20px; letter-spacing: normal; text-transform: none; color: var(--neutral-700); }
+  .flow-node.main { width: 9px; height: 9px; background: var(--bronze-800); }
 }
 
 /* ---------- 4. Contact ---------- */
@@ -342,6 +382,7 @@ a { color: inherit; text-decoration: none; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .contact-lead { color: var(--neutral-700); font-size: 18px; line-height: 30px; margin: var(--space-6) 0 0; max-width: 460px; }
+@media (max-width: 860px) { .contact-lead { font-size: 16px; line-height: 26px; margin-top: var(--space-4); } }
 .contact-details { margin: var(--space-12) 0 0; display: grid; gap: var(--space-6); max-width: 420px; }
 .contact-details div { padding-top: var(--space-4); border-top: 1px solid var(--neutral-300); }
 .contact-details dt {
