@@ -150,7 +150,12 @@
   .leader-name { font-size: 20px; }
 }
 @media (max-width: 480px) {
-  .leaders { grid-template-columns: 1fr; max-width: 320px; margin-inline: auto; }
+  /* phones: the road is a quiet backdrop for the whole section, winding from the top down past both leaders,
+     so it never ends on anyone; the leaders start after the first bend */
+  .road { overflow: visible; }
+  .road-canvas { position: sticky; top: 0; height: 100svh; min-height: 0; margin-bottom: -100svh; opacity: .22; }
+  .road.focus .road-canvas { opacity: .22; filter: none; }
+  .leaders { grid-template-columns: 1fr; max-width: 320px; margin-inline: auto; margin-top: 52svh; gap: var(--space-16); }
 }
 @media (prefers-reduced-motion: reduce) {
   .js .lead-shapes .ls-side { opacity: 1; transform: none; animation: none; }

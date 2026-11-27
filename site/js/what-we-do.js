@@ -221,8 +221,65 @@
     if (focus) btn.focus();
     load();
   }
+  /* phones (720px and below): the areas are cards; tapping one opens the chart right under it, tapping again closes it */
+  var phone = window.matchMedia('(max-width: 720px)');
+  var areasEl = document.querySelector('.areas');
+  // the chart slides open and shut: height and opacity eased, the content lifting slightly as it arrives
+  var anim = null, animTimer = 0, EASE = 'cubic-bezier(.22,.61,.36,1)';
+  function slide(open, done) {
+    if (anim) { anim.cancel(); anim = null; }
+    clearTimeout(animTimer);
+    if (reduced) { panel.classList.toggle('collapsed', !open); if (done) done(); return; }
+    panel.classList.remove('collapsed');
+    var h = panel.scrollHeight, dur = open ? 520 : 380;
+    panel.style.overflow = 'hidden';
+    anim = panel.animate(open
+      ? [{ height: '0px', opacity: 0, transform: 'translateY(-8px)' }, { height: h + 'px', opacity: 1, transform: 'none' }]
+      : [{ height: h + 'px', opacity: 1, transform: 'none' }, { height: '0px', opacity: 0, transform: 'translateY(-8px)' }],
+      { duration: dur, easing: EASE, fill: 'forwards' });
+    // settle on a timer rather than the finish event, which waits for a rendered frame
+    animTimer = setTimeout(function () {
+      if (anim) { anim.cancel(); anim = null; }
+      panel.style.overflow = '';
+      if (!open) panel.classList.add('collapsed');
+      if (done) done();
+    }, dur + 20);
+  }
+  function closeAll(done) {
+    var wasOpen = tabs.some(function (t) { return t.getAttribute('aria-expanded') === 'true'; });
+    tabs.forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
+    if (wasOpen && !panel.classList.contains('collapsed')) slide(false, done);
+    else { panel.classList.add('collapsed'); if (done) done(); }
+  }
+  function openCard(btn) {
+    closeAll(function () {
+      select(btn);
+      tabs.forEach(function (t) { t.setAttribute('aria-expanded', String(t === btn)); });
+      btn.insertAdjacentElement('afterend', panel);
+      panel.classList.remove('collapsed');
+      size();
+      slide(true);
+      setTimeout(function () { btn.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+    });
+  }
+  function setMode() {
+    if (phone.matches) { tabs.forEach(function (t) { t.setAttribute('aria-expanded', 'false'); }); panel.classList.add('collapsed'); }
+    else {
+      tabs.forEach(function (t) { t.removeAttribute('aria-expanded'); });
+      areasEl.insertAdjacentElement('afterend', panel);
+      panel.classList.remove('collapsed');
+      var cur = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0] || tabs[0];
+      select(cur);
+    }
+  }
+  if (phone.addEventListener) phone.addEventListener('change', setMode); else phone.addListener(setMode);
+  setMode();
+
   tabs.forEach(function (b, i) {
-    b.addEventListener('click', function () { select(b); });
+    b.addEventListener('click', function () {
+      if (!phone.matches) { select(b); return; }
+      if (b.getAttribute('aria-expanded') === 'true') closeAll(); else openCard(b);
+    });
     b.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); select(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length], true); }
     });

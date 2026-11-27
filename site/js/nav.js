@@ -35,7 +35,7 @@
   /* ---------- phone menu ---------- */
   function set(open) {
     btn.setAttribute('aria-expanded', String(open));
-    btn.firstChild.nodeValue = open ? 'Close' : 'Menu';
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     nav.classList.toggle('open', open);
     document.body.classList.toggle('menu-open', open);
   }

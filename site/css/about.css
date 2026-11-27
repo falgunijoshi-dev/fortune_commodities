@@ -264,6 +264,7 @@
 }
 @media (max-width: 720px) {
   .story { padding: var(--space-16) 0 var(--space-24); }
+  .story-statement { font-size: 24px; line-height: 1.2; }
   .story-sub { margin-left: 0; font-size: 18px; line-height: 30px; }
   .journey, .ventures { padding: var(--space-16) 0 var(--space-24); }
   .timeline { grid-template-columns: 1fr; gap: var(--space-12); padding-left: var(--space-12); }
@@ -276,6 +277,26 @@
   .venture.open .v-body-in { padding-bottom: var(--space-8); }
   .v-plus { width: 38px; height: 38px; }
   .sec-head { margin-bottom: var(--space-12); }
+  .v-name { font-size: 28px; }                        /* OPTIMUS / VINTAGE */
+  .p-statement { font-size: 22px; line-height: 1.22; }  /* vision and mission statements, gradient part included */
+  /* milestones, phones: a more compact timeline */
+  .journey { padding: var(--space-12) 0 var(--space-16); }
+  .timeline { gap: var(--space-8); padding-left: var(--space-8); }
+  .timeline::before, .timeline::after { left: 5px; }
+  .node { left: calc(-1 * var(--space-8)); top: 5px; width: 11px; height: 11px; }
+  .milestone.lit .node { box-shadow: 0 0 0 4px color-mix(in srgb, var(--bronze) 18%, transparent); }
+  .m-year { font-size: 30px; }
+  .m-text { margin-top: var(--space-2); font-size: 16px; line-height: 24px; }
+  /* Who we are, phones: the title set big and flush left, breaking as "Who we / are" */
+  /* Who we are, phones: a shorter hero with the title anchored low and flush left under a short bronze rule,
+     and the lit gold bar up and to the right (gold-hero.js), so the two never overlap */
+  .about .page-hero { min-height: 100svh; place-items: end start; text-align: left; padding-bottom: var(--space-16); }   /* first view: only the title */
+  .about .page-hero-inner::before {
+    content: ""; display: block; width: 44px; height: 1px; margin-bottom: var(--space-6);
+    background: var(--bronze-300); box-shadow: 0 0 10px color-mix(in srgb, var(--bronze-300) 70%, transparent);
+  }
+  .about .page-title { font-size: 22vw; line-height: .92; }
+  .about .page-title .pt-2 { display: block; }   /* "Who" / "we are" */
 }
 @media (prefers-reduced-motion: reduce) {
   .js .rise, .js .reveal { opacity: 1; transform: none; animation: none; transition: none; }

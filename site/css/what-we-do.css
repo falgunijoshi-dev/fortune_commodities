@@ -162,6 +162,25 @@
   .fut-h { padding-top: 0; }
 }
 @media (max-width: 720px) {
+  /* Core Areas on phones: stacked cards, each opening its chart beneath it (js/what-we-do.js) */
+  .areas { grid-template-columns: 1fr; gap: var(--space-3); }
+  .area { grid-template-columns: auto 1fr; padding: 16px 52px 12px 16px; scroll-margin-top: 104px; }
+  .area:hover { transform: none; }
+  .area::after, .area[aria-selected="true"]::after {   /* plus / minus in place of the desktop notch */
+    content: "+"; position: absolute; right: 16px; top: 14px; left: auto; bottom: auto;
+    width: 26px; height: 26px; display: grid; place-items: center; transform: none;
+    font: 400 18px/1 var(--font-body); color: var(--taupe-300);
+    background: none; border: 1px solid color-mix(in srgb, var(--taupe-700) 70%, transparent); border-radius: 50%;
+    transition: transform .4s cubic-bezier(.22,.61,.36,1), color .3s, border-color .3s;
+  }
+  .area[aria-expanded="false"] { background: linear-gradient(180deg, #241e1a, #1c1714); border-color: color-mix(in srgb, var(--umber-500) 35%, transparent); box-shadow: inset 0 1px 0 rgba(255, 236, 214, .06), 0 10px 24px rgba(0, 0, 0, .3); }
+  .area[aria-expanded="false"] .area-n { color: var(--neutral-500); }
+  .area[aria-expanded="false"] .spark path { stroke: var(--viz-line); }
+  .area[aria-expanded="true"]::after { content: "\2212"; color: var(--bronze-200); border-color: var(--bronze-300); transform: rotate(180deg); }
+  .area { transition: border-color .3s var(--ease-out), background-color .3s, color .3s, border-radius .3s; }
+  .area[aria-expanded="true"] { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+  .areas .panel-chart { margin-top: calc(-1 * var(--space-3)); border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+  .panel-chart.collapsed { display: none; }
   .wwd .wrap { padding: 0 var(--space-6); }
   .area { padding: 14px; }
   .area-name { font-size: 15px; }
@@ -171,9 +190,38 @@
   .pr-list { grid-template-columns: 1fr 1fr; }
   .pr-list li { min-height: 96px; padding: 14px; }
   .pr-list li:last-child { grid-column: 1 / -1; }   /* five items: the last one spans the row */
-  .fut-toggle { flex-wrap: wrap; gap: var(--space-4); padding: 22px 20px; }
-  .fut-meta { order: 3; margin-left: 0; width: 100%; }
-  .fut-icon { margin-left: auto; width: 44px; height: 44px; }
+  /* Futures on phones: not another card. An open band between two hairlines (a bronze one on top),
+     the title with an outline button, then the two counts set large */
+  .fut-toggle {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; row-gap: var(--space-6);
+    padding: var(--space-8) 0; overflow: visible;
+    background: none; border: 0; border-radius: 0; box-shadow: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--taupe-700) 60%, transparent);
+  }
+  .fut-toggle::before {   /* bronze rule across the top, brightest at the left */
+    inset: 0 0 auto; height: 1px; opacity: 1; z-index: 0;
+    background: linear-gradient(90deg, var(--bronze-300), color-mix(in srgb, var(--taupe-700) 60%, transparent) 70%);
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .fut-toggle:hover { transform: none; box-shadow: none; }
+  .fut-toggle[aria-expanded="true"] { border-color: color-mix(in srgb, var(--taupe-700) 60%, transparent); }
+  .fut-title { grid-column: 1; grid-row: 1; font-size: 26px; }
+  .fut-icon {
+    grid-column: 2; grid-row: 1; width: 40px; height: 40px;
+    background: none; border: 1px solid var(--bronze-300); box-shadow: none;
+  }
+  .fut-icon::before, .fut-icon::after { width: 14px; margin: -1px 0 0 -7px; background: var(--bronze-200); }
+  .fut-toggle:hover .fut-icon { background: none; box-shadow: 0 0 0 6px color-mix(in srgb, var(--bronze) 16%, transparent); }
+  .fut-meta { grid-column: 1 / -1; grid-row: 2; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .fut-meta span {
+    display: flex; flex-direction: column; gap: 6px; padding: 0; border: 0; border-radius: 0; background: none;
+    font-size: 11px; letter-spacing: .16em; color: var(--taupe-400);
+  }
+  .fut-meta span + span { padding-left: var(--space-6); border-left: 1px solid color-mix(in srgb, var(--taupe-700) 60%, transparent); }
+  .fut-meta b {
+    font-family: var(--font-display); font-weight: 700; font-size: 44px; line-height: 1; letter-spacing: -.03em; margin: 0;
+    background: linear-gradient(100deg, var(--hl-1), var(--hl-2) 45%, var(--hl-3)); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   .futures-wrap { padding-bottom: var(--space-24); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -181,43 +229,76 @@
   .futures { transition: none; }
 }
 
-/* ---------- hero: question marks drawn in fine line, kept faint so the title leads ----------
-   One large outline under the title, two small ones at the sides, and the four desks in a quiet row along the bottom. */
 .wwd .page-hero .page-title { position: relative; z-index: 1; }
-.qm-field { position: absolute; inset: 0; z-index: -1; pointer-events: none; font-family: var(--font-display); font-weight: 700; line-height: 1; }
-.qm-big, .qm { position: absolute; color: transparent; }
-.qm-big {
-  left: 50%; top: 50%; translate: -50% -40%;
-  font-size: clamp(300px, 62vh, 600px);
-  -webkit-text-stroke: 1.2px color-mix(in srgb, var(--taupe-200) 26%, transparent);
-  animation: qm-float 10s ease-in-out infinite;
+/* ---------- hero, desktop: fine lines converge on the title and lean toward the pointer (js/hero-lines.js) ---------- */
+.wwd .hero-lines { display: none; }
+@media (min-width: 721px) { .wwd .hero-lines { display: block; } }
+/* soft blobs of light drifting slowly behind the lines (phones: behind the chart), all from the bronze family */
+.blobs span { filter: blur(60px); }
+.blobs span:nth-child(1) {   /* warm amber, upper centre */
+  width: 46vw; height: 40vw; max-width: 720px; max-height: 560px; left: 50%; top: 8%; transform: translateX(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-amber) 46%, transparent), transparent);
+  animation: blob-a 19s ease-in-out infinite alternate;
 }
-.qm { -webkit-text-stroke: 1px color-mix(in srgb, var(--taupe-200) 22%, transparent); animation: qm-drift 12s ease-in-out infinite; }
-.q5 { left: 6%;  top: 50%; font-size: 26px; rotate: -6deg;  animation-delay: -4s; }
-.q6 { right: 6%; top: 50%; font-size: 26px; rotate: 6deg;   animation-delay: -10s; }
-/* the four desks: a quiet row at the very bottom of the hero, centred under the title, no dividers */
-.hint-row {
-  position: absolute; left: 50%; bottom: clamp(12px, 2.2vh, 24px); translate: -50% 0; z-index: 1;
-  list-style: none; margin: 0; padding: 0;
-  display: flex; align-items: flex-start; justify-content: center;
-  color: color-mix(in srgb, var(--taupe-200) 42%, transparent);
+.blobs span:nth-child(2) {   /* ember, lower left */
+  width: 38vw; height: 34vw; left: -6%; top: 48%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-ember) 42%, transparent), transparent);
+  animation: blob-b 16s ease-in-out infinite alternate;
 }
-.hint-row li { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 clamp(24px, 3.2vw, 52px); }
-.hint-row svg { width: 30px; height: 30px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.hint-row svg .fill { fill: currentColor; stroke: none; }
-.hint-row svg text { fill: currentColor; stroke: none; font-family: var(--font-condensed); font-size: 9px; text-anchor: middle; }
-.hint-row span {
-  font-family: var(--font-condensed); font-weight: 500; font-size: 12px; line-height: 16px;
-  letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+.blobs span:nth-child(3) {   /* deep umber, right */
+  width: 42vw; height: 42vw; right: -8%; top: 22%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--umber-500) 80%, transparent), transparent);
+  animation: blob-c 22s ease-in-out infinite alternate;
 }
-@media (max-width: 860px) {
-  .qm-big { font-size: min(92vw, 400px); }
-  .q5 { left: 5%; top: 40%; font-size: 20px; } .q6 { right: 5%; top: 40%; font-size: 20px; }
-  .hint-row { display: grid; grid-template-columns: 1fr 1fr; row-gap: var(--space-6); width: min(100% - 32px, 360px); bottom: 12px; }
-  .hint-row li { padding: 0 8px; }
-  .hint-row svg { width: 24px; height: 24px; }
-  .hint-row span { font-size: 10px; letter-spacing: .08em; white-space: normal; text-align: center; }
+.blobs span:nth-child(4) {   /* cocoa, low centre */
+  width: 50vw; height: 30vw; left: 30%; bottom: -6%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-cocoa) 95%, transparent), transparent);
+  animation: blob-a 25s ease-in-out infinite alternate-reverse;
 }
-@keyframes qm-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@keyframes qm-drift { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-@media (prefers-reduced-motion: reduce) { .qm-big, .qm { animation: none; } }
+@keyframes blob-a { to { translate: 8% 10%; scale: 1.12; } }
+@keyframes blob-b { to { translate: 18% -12%; scale: .9; } }
+@keyframes blob-c { to { translate: -14% 12%; scale: 1.1; } }
+@media (prefers-reduced-motion: reduce) { .blobs span { animation: none; } }
+@media (max-width: 720px) {   /* phones: bigger blobs so they read on a narrow screen */
+  .blobs span:nth-child(1) { width: 110vw; height: 90vw; top: 10%; }
+  .blobs span:nth-child(2) { width: 90vw; height: 90vw; left: -30%; top: 50%; }
+  .blobs span:nth-child(3) { width: 90vw; height: 90vw; right: -35%; top: 25%; }
+  .blobs span:nth-child(4) { width: 110vw; height: 60vw; left: -5%; bottom: 0; }
+}
+/* phones: a very light chart on graph paper behind everything, and the blobs roaming slowly around the whole screen */
+.hero-graph { display: none; }
+@media (max-width: 720px) {
+  .hero-graph {
+    display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--bronze-300) 10%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--bronze-300) 10%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px; background-position: center top;
+    -webkit-mask-image: radial-gradient(120% 80% at 50% 45%, #000 30%, transparent 85%);
+            mask-image: radial-gradient(120% 80% at 50% 45%, #000 30%, transparent 85%);
+  }
+  .hero-graph canvas { width: 100%; height: 100%; display: block; }
+
+  .blobs span:nth-child(1) { animation: roam-1 34s ease-in-out infinite; }
+  .blobs span:nth-child(2) { animation: roam-2 40s ease-in-out infinite; }
+  .blobs span:nth-child(3) { animation: roam-3 37s ease-in-out infinite; }
+  .blobs span:nth-child(4) { animation: roam-4 44s ease-in-out infinite; }
+  @keyframes roam-1 { 0%, 100% { translate: 0 0; } 25% { translate: 30vw 30svh; } 50% { translate: -25vw 55svh; } 75% { translate: -30vw 10svh; } }
+  @keyframes roam-2 { 0%, 100% { translate: 0 0; } 25% { translate: 55vw -20svh; } 50% { translate: 70vw -45svh; } 75% { translate: 15vw -35svh; } }
+  @keyframes roam-3 { 0%, 100% { translate: 0 0; } 25% { translate: -45vw 35svh; } 50% { translate: -70vw -5svh; } 75% { translate: -20vw -20svh; } }
+  @keyframes roam-4 { 0%, 100% { translate: 0 0; } 25% { translate: -20vw -40svh; } 50% { translate: 25vw -60svh; } 75% { translate: 30vw -20svh; } }
+}
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .blobs span { animation: none !important; }
+}
+/* phones: the same opening as Who we are. A full first screen, the lines meeting up top, the title low and flush left
+   under a short bronze rule ("What" / "we do") */
+@media (max-width: 720px) {
+  .wwd .page-hero { min-height: 100svh; place-items: end start; align-content: end; text-align: left; padding-bottom: var(--space-12); }
+  .wwd .page-hero-inner::before {
+    content: ""; display: block; width: 44px; height: 1px; margin-bottom: var(--space-6);
+    background: var(--bronze-300); box-shadow: 0 0 10px color-mix(in srgb, var(--bronze-300) 70%, transparent);
+  }
+  .wwd .page-title { font-size: 22vw; line-height: .92; }
+  .wwd .page-title .pt-2 { display: block; }
+}

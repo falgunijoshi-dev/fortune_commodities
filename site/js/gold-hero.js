@@ -30,7 +30,7 @@
   var bars = [];
   function layout() {
     bars = [];
-    s = Math.max(26, Math.min(48, W / 26));
+    s = W > 720 ? Math.max(26, Math.min(48, W / 26)) : Math.max(32, W / 10.5);   // phones: larger bars
     var ox = W / 2, oy = H * 0.1;
     var span = Math.ceil((W + H) / (s * 1.2)) + 4;
     for (var gx = -span; gx <= span; gx++) {
@@ -43,7 +43,8 @@
     }
     bars.sort(function (p, q) { return p.d - q.d; });     // back to front
     // the lit bar: the one closest to a point just under the title
-    var tx = W / 2, ty = H * (W > 760 ? 0.72 : 0.68), best = 1e9;
+    // phones: the title sits low and left, so the lit bar moves up and right, clear of it
+    var tx = W > 720 ? W / 2 : W * 0.6, ty = H * (W > 760 ? 0.72 : W > 720 ? 0.68 : 0.5), best = 1e9;
     lit = null;
     bars.forEach(function (b) { var d = Math.hypot(b.f.c[0] - tx, b.f.c[1] - ty); if (d < best) { best = d; lit = b; } });
   }

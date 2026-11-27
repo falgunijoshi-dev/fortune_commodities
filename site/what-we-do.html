@@ -10,43 +10,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500&family=IBM+Plex+Sans:wght@700&display=swap">
   <link rel="stylesheet" href="css/tokens.css?v=4">
-  <link rel="stylesheet" href="css/styles.css?v=38">
+  <link rel="stylesheet" href="css/styles.css?v=54">
   <link rel="stylesheet" href="css/themes.css?v=5">
-  <link rel="stylesheet" href="css/about.css?v=11">
-  <link rel="stylesheet" href="css/what-we-do.css?v=15">
+  <link rel="stylesheet" href="css/about.css?v=23">
+  <link rel="stylesheet" href="css/what-we-do.css?v=29">
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="Fortune Commodities FZCO, home">
       <img src="assets/logo-cream.png" alt="Fortune Commodities FZCO" width="640" height="232">
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu<span aria-hidden="true"></span></button>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu"><span aria-hidden="true"></span></button>
     <nav class="nav" id="main-nav" aria-label="Main">
       <a href="who-we-are.html">Who we are</a>
       <a href="what-we-do.html" aria-current="page">What we do</a>
       <a href="technology.html">Technology</a>
       <a href="leadership.html">Leadership</a>
+      <div class="nav-foot">Dubai, United Arab Emirates<br><a href="mailto:info@fortunecommodities.com">info@fortunecommodities.com</a></div>
       <span class="nav-ink" aria-hidden="true"></span>
     </nav>
   </header>
 
   <main class="wwd">
-    <!-- 1. Hero: the title over a field of question marks -->
+    <!-- 1. Hero: converging lines on desktop, a live chart on phones -->
     <section class="page-hero">
-      <div class="qm-field" aria-hidden="true">
-        <span class="qm-big">?</span>
-        <span class="qm q5">?</span><span class="qm q6">?</span>
-      </div>
-      <!-- the four desks, set quietly along the bottom of the hero -->
-      <ul class="hint-row" aria-label="Trading areas">
-        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M4 10c10 2 16 8 20 14M4 38c10-2 16-8 20-14M24 24h20" /><path d="M24 20.5l3.5 3.5-3.5 3.5-3.5-3.5z" class="fill"/></svg><span>Arbitrage Trading</span></li>
-        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M10 17h26m-5-5 5 5-5 5M38 31H12m5-5-5 5 5 5"/><text x="24" y="10.5">$</text><text x="24" y="44">€</text></svg><span>Foreign Exchange Trading</span></li>
-        <li><svg aria-hidden="true" viewBox="0 0 48 48"><circle cx="15" cy="33" r="7"/><circle cx="33" cy="33" r="7"/><circle cx="24" cy="18" r="7"/><circle cx="15" cy="33" r="2.5"/><circle cx="33" cy="33" r="2.5"/><circle cx="24" cy="18" r="2.5"/><path d="M5 41h38"/></svg><span>Commodity Trading</span></li>
-        <li><svg aria-hidden="true" viewBox="0 0 48 48"><path d="M8 38h14l-2-7H10zM26 38h14l-2-7H28zM17 29h14l-2-7H19z"/><path d="M10 31l2-1.5h6M28 31l2-1.5h6M19 22l2-1.5h6" opacity=".6"/></svg><span>Gold Trading</span></li>
-      </ul>
-      <div class="page-hero-glow" aria-hidden="true"><span></span><span></span></div>
+      <!-- phones: a live market chart on graph paper, behind the title (js/hero-chart.js) -->
+      <div class="hero-graph" aria-hidden="true"><canvas id="hero-chart"></canvas></div>
+      <!-- desktop: fine lines fanning in to meet at the title, leaning toward the pointer (js/hero-lines.js) -->
+      <canvas class="hero-lines" id="hero-lines" aria-hidden="true"></canvas>
+      <div class="page-hero-glow blobs" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       <div class="page-hero-inner">
-        <h1 class="page-title rise">What we do</h1>
+        <h1 class="page-title rise">What <span class="pt-2">we do</span></h1>
       </div>
     </section>
 
@@ -203,9 +197,11 @@
     </div>
   </footer>
 
-  <script src="js/nav.js?v=3"></script>
+  <script src="js/nav.js?v=4"></script>
   <script src="js/footer.js?v=6"></script>
   <script src="js/about.js?v=5"></script>
-  <script src="js/what-we-do.js?v=5"></script>
+  <script src="js/hero-lines.js?v=3"></script>
+  <script src="js/hero-chart.js?v=1"></script>
+  <script src="js/what-we-do.js?v=8"></script>
 </body>
 </html>
